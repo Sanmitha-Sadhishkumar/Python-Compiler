@@ -474,8 +474,52 @@ char *yytext;
 #line 1 "tokens.l"
 #define INITIAL 0
 #line 2 "tokens.l"
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
-#line 479 "lex.yy.c"
+typedef struct SymbolTable{
+  char token[10];
+  char attr[100];
+}SymbolTable;
+
+SymbolTable ST[1000];
+int STn=0;
+
+void printST(){
+  printf("\nPrinting Symbol Table ");
+  for(int i=0;i<STn;i++){
+    printf("\n%s : %s",ST[i].token, ST[i].attr);
+  }
+}
+
+int installID(char *a){
+  for(int i=0;i<STn;i++){
+    if((strcmp(ST[i].token, "ID")==0)&&(strcmp(ST[i].attr, a)==0)){
+      return i;
+    }
+  }
+  strcpy(ST[STn].token,"ID");
+  strcpy(ST[STn].attr,a);
+  printf("%s : %s",ST[STn].token, ST[STn].attr);
+  STn++;
+  return STn-1;
+}
+
+int installNum(char *b){
+  for(int i=0;i<STn;i++){
+    if((strcmp(ST[i].token, "NUM")==0)&&(strcmp(ST[i].attr, b)==0)){
+      return i;
+    }
+  }
+  strcpy(ST[STn].token,"NUM");
+  strcpy(ST[STn].attr,b);
+  printf("%s : %s",ST[STn].token, ST[STn].attr);
+  STn++;
+  return STn-1;
+}
+
+#line 523 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -626,9 +670,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 51 "tokens.l"
+#line 96 "tokens.l"
 
-#line 632 "lex.yy.c"
+#line 676 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -713,210 +757,216 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 52 "tokens.l"
+#line 97 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 53 "tokens.l"
+#line 98 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 54 "tokens.l"
+#line 99 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 55 "tokens.l"
+#line 100 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 56 "tokens.l"
+#line 101 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 57 "tokens.l"
+#line 102 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 58 "tokens.l"
+#line 103 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 59 "tokens.l"
+#line 104 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 60 "tokens.l"
+#line 105 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 61 "tokens.l"
+#line 106 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 62 "tokens.l"
+#line 107 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 63 "tokens.l"
+#line 108 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 64 "tokens.l"
+#line 109 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 65 "tokens.l"
+#line 110 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 66 "tokens.l"
+#line 111 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 67 "tokens.l"
+#line 112 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 68 "tokens.l"
+#line 113 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 69 "tokens.l"
+#line 114 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 70 "tokens.l"
+#line 115 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 71 "tokens.l"
+#line 116 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 72 "tokens.l"
+#line 117 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 73 "tokens.l"
+#line 118 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 74 "tokens.l"
+#line 119 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 75 "tokens.l"
+#line 120 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 76 "tokens.l"
+#line 121 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 77 "tokens.l"
+#line 122 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 78 "tokens.l"
+#line 123 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 79 "tokens.l"
+#line 124 "tokens.l"
 {printf("keyword ");}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 81 "tokens.l"
-{printf("Integer ");}
+#line 126 "tokens.l"
+{printf("\nInteger : %s ",yytext);
+      int a = installNum(yytext);
+      printf("\nAdded to Symbol table  : %d",a);
+      printST();}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 82 "tokens.l"
+#line 131 "tokens.l"
 {printf("String ");}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 83 "tokens.l"
+#line 132 "tokens.l"
 {printf("Float ");}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 84 "tokens.l"
+#line 133 "tokens.l"
 {printf("Boolean ");}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 86 "tokens.l"
+#line 135 "tokens.l"
 {printf("relop ");}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 87 "tokens.l"
+#line 136 "tokens.l"
 {printf("assign ");}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 88 "tokens.l"
+#line 137 "tokens.l"
 {printf("arith ");}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 89 "tokens.l"
+#line 138 "tokens.l"
 {printf("logical ");}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 90 "tokens.l"
+#line 139 "tokens.l"
 {printf("bitwise ");}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 91 "tokens.l"
+#line 140 "tokens.l"
 {printf("idop ");}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 92 "tokens.l"
+#line 141 "tokens.l"
 {printf("memop");}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 93 "tokens.l"
-{printf("Identifier ");}
+#line 143 "tokens.l"
+{printf("\nIdentifier : %s ",yytext);
+      int a = installID(yytext);
+      printf("\nAdded to Symbol table  : %d",a);
+      printST();}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 94 "tokens.l"
+#line 147 "tokens.l"
 ECHO;
 	YY_BREAK
-#line 920 "lex.yy.c"
+#line 970 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1802,7 +1852,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 94 "tokens.l"
+#line 147 "tokens.l"
 
 
 void main(){
