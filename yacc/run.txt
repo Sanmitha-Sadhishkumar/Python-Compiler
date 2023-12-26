@@ -1,0 +1,4 @@
+flex lexer.l           # Generates lex.yy.c
+bison -d parser.y      # Generates parser.tab.c and parser.tab.h
+
+gcc -o my_parser ../lex/lex.yy.c expression.tab.c
