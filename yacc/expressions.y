@@ -2,54 +2,49 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "../lex/lex.yy.c"
+#include "../C_routines/SyntaxTree.h"
+
 int yylex();
 void yyerror(const char *s);
 int i=0;
+
+typedef struct Exp {
+        char *code;
+        char *addr;
+    } Exp;
 %}
 
 %union {
     char *lexeme;
-    int value;
-    char *code;
-    char *addr;
-    struct {
-        char *code;
-        char *addr;
-    } exp;
-};
+    char *value;
+    double d;
+    struct SyntaxTree *Sy;
+    int i;
+}
+
+%type <Sy> E S
+%token <lexeme> id ID 
+%token <value> LITERAL num
+%token <d> doublenum
+%token <i> intnum
 
 %left '+' '-'
-%token <lexeme> id
-%token <value> LITERAL
-%type <code> S
-%type <exp> E
-
 %%
 
-S : id '=' E   { $$.code = strcat($3.exp.code, strcat($1.lexeme, strcat("=", $3.exp.addr))); }
-  ;
+S : id '=' E {$$ = newST('=',newid($1), $3);}
 
-E : E '+' E    { 
-                    $$.exp.addr = (char*)malloc(sizeof(char) * 10);
-                    char c[10];
-                    sprintf(c, "t%d", i);
-                    i++;
-                    strcpy($$.exp.addr, c);
-                    $$.code = strcat($1.exp.code, strcat($3.exp.code, strcat($$.exp.addr, "=", strcat($1.exp.addr, "+", $3.exp.addr))));
-                }
-  | '-' E      {
-                    $$.addr = (char*)malloc(sizeof(char) * 10);
-                    char c[10];
-                    sprintf(c, "t%d", i);
-                    i++;
-                    strcpy($$.addr, c);
-                    $$.code = strcat($2.exp.code, strcat($$.exp.addr, "=-", $2.exp.addr));
-                }
-  | '(' E ')'  { $$.exp.addr = $2.exp.addr; $$.exp.code = $2.exp.code; }
-  | id         { $$.exp.addr = $1.lexeme; $$.exp.code = ""; }
-  ;
 
+E : E '+' E { $$ = newST('+',$1, $3); }
+
+| '-' E {$$ = newST('-',$2, NULL);}
+
+| '(' E ')' {$$ = $2;}
+
+| id { $$ = newid($1);}
+
+| intnum { $$ = newint($1);}
+
+| doublenum { $$ = newdouble($1);}
 %%
 
 void yyerror(const char *s) {

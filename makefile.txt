@@ -1,0 +1,3 @@
+flex lex/tokens.l
+bison yacc/expressions.y
+gcc yacc/expressions.tab.c lex/lex.yy.c -lfl -o myprg
