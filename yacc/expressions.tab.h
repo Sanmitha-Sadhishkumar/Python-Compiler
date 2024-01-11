@@ -42,7 +42,12 @@
      id = 258,
      ID = 259,
      LITERAL = 260,
-     num = 261
+     FLOAT = 261,
+     INT = 262,
+     relop = 263,
+     arith = 264,
+     assign = 265,
+     UMINUS = 266
    };
 #endif
 
@@ -53,17 +58,19 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 17 "expressions.y"
+#line 13 "expressions.y"
 
     char *lexeme;
     char *value;
-    double d;
+    double dvalue;
     struct SyntaxTree *Sy;
+    int ivalue;
+    char *op;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 67 "expressions.tab.h"
+#line 74 "expressions.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

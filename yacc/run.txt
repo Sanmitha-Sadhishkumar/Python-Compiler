@@ -1,4 +1,5 @@
 flex lexer.l           # Generates lex.yy.c
-bison -d parser.y      # Generates parser.tab.c and parser.tab.h
+bison -d -v parser.y      # Generates parser.tab.c and parser.tab.h
 
-gcc -o my_parser ../lex/lex.yy.c expression.tab.c
+gcc expressions.tab.c ../lex/lex.yy.c ../C_routines/SyntaxTree.c ../C_routines/SymbolTable.c -o myprg &&
+myprg

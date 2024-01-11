@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
 #include<stdio.h>
 #include<stdlib.h>
@@ -9,34 +11,41 @@
 
 id [a-zA-Z_][a-zA-Z_0-9]*
 
-int [-]?[0-9]+
-float [-]?[0-9]+([.][0-9]+)?([Ee][+-]?[0-9]+)?
+INT [-]?[0-9]+
+FLOAT [-]?[0-9]+([.][0-9]+)?([Ee][+-]?[0-9]+)?
 bool "True" | "False"
 str (\"([^\"\\\\]|\\\\.)*\")|('([^'\\\\]|\\\\.)*')
 
+assign [+-/%*]?=
+arith [+-/%*]
+
+
 %%
 
-{id} {
-    printf("\nIdentifier : %s ", yytext);
-    int a = installID(yytext, NULL);
+{id} {int a = installID(yytext, "ID");
     yylval.lexeme = strdup(yytext);
-    return ID;
+    return id;
 }
 
-{int} {printf("\nInteger : %s ",yytext);
-      int a = installLit(yytext,"INT");
+{INT} {int a = installLit(yytext,"INT");
+      yylval.value = strdup(yytext);
+      return INT;}
+
+{str} {int a = installLit(yytext,"STR");
       yylval.value = strdup(yytext);
       return LITERAL;}
 
-{str} {printf("String ");
-      int a = installLit(yytext,"STR");
+{FLOAT} {int a = installLit(yytext,"FLOAT");
       yylval.value = strdup(yytext);
-      return LITERAL;}
+      return FLOAT;}
 
-{float} {printf("Float ");
-      int a = installLit(yytext,"FLOAT");
-      yylval.value = strdup(yytext);
-      return LITERAL;}
+{assign} {yylval.op = strdup(yytext);
+      return assign; }
+
+{arith} {yylval.op = strdup(yytext);
+      return arith;}
+
+
 %%
 
 int yywrap(){

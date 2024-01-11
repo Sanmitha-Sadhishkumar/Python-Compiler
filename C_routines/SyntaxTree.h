@@ -3,36 +3,28 @@
 #include<stdlib.h>
 
 typedef struct SyntaxTree {
-  int nodetype;
-  struct SyntaxTree *l;
-  struct SyntaxTree *r;
-}SyntaxTree;
+    int nodetype;
+    union {
+        char *id;
+        int intval;
+        double doubleval;
+        char *op;
+    } value;
+    struct SyntaxTree *l;
+    struct SyntaxTree *r;
+} SyntaxTree;
 
-typedef struct doubleval {
-  int nodetype; 
-  double number;
-}doubleval;
 
-typedef struct intval {
-  int nodetype; 
-  int number;
-}intval;
+SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r);
 
-typedef struct idval {
-  char* nodetype; 
-  char *id;
-}idval;
+SyntaxTree * newDoubleNode(double value);
 
-SyntaxTree * newST(int nodetype, SyntaxTree *l, SyntaxTree *r);
+SyntaxTree * newIntNode(int value);
 
-SyntaxTree * newdouble(double d);
-
-SyntaxTree * newint(int d);
+SyntaxTree * newIDNode(char* id);
 
 double eval(SyntaxTree *a);
 
 void treefree(SyntaxTree *a);
 
 void printSyntaxTree(SyntaxTree * head);
-
-SyntaxTree* newid(char* d);

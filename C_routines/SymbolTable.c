@@ -3,7 +3,6 @@
 #include<stdlib.h>
 #include "SymbolTable.h"
 
-
 SymbolTable ST[1000];
 int STn=0;
 
