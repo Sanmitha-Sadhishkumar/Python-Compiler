@@ -10,6 +10,8 @@ typedef struct SyntaxTree {
         double doubleval;
         char *op;
     } value;
+    char *addr;
+    char *code;
     struct SyntaxTree *l;
     struct SyntaxTree *r;
 } SyntaxTree;

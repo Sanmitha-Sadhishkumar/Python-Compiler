@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include "SyntaxTree.h"
 
 typedef struct triple{
     char *op;
@@ -15,11 +16,8 @@ typedef struct quadruple{
     char *res;
 }quadruple;
 
-triple T[1000];
-int t=0;
-quadruple Q[1000];
-int q=0;
+int addTriple(char *o, SyntaxTree *a1, SyntaxTree *a2);
 
-void addTriple(char *o, char *a1, char *a2);
+int addQuadruple(char *o, SyntaxTree *a1, SyntaxTree *a2, SyntaxTree *r);
 
-void addQuadruple(char *o, char *a1, char *a2, char *r);
+void printT();

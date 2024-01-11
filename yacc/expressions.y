@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "../C_routines/SyntaxTree.h"
+#include "../C_routines/3AddrCode.h"
 #define YYERROR_VERBOSE 1
 extern int yylineno;
 extern FILE* yyin;
@@ -32,12 +32,22 @@ int i=0;
 
 %%
 
-S : id assign E { $$ = newOpNode($2, newIDNode($1), $3); printSyntaxTree($$); }
+S : id assign E { $$ = newOpNode($2, newIDNode($1), $3);
+                  //printSyntaxTree($$); 
+                  int a =addTriple($2, newIDNode($1), $3);
+                  int b= addQuadruple($2, $3, $3, newIDNode($1));
+                  printT();
+                  }
   ;
 
-E : E arith E { $$ = newOpNode($2, $1, $3); }
+E : E arith E { $$ = newOpNode($2, $1, $3);
+                int a=addTriple($2, $1, $3);
+                addQuadruple($2,$1,$3,$$); }
   | "(" E ")" { $$ = $2; }
-  | "-" E %prec UMINUS { $$ = newOpNode("-", 0, $2); }
+  | "-" E %prec UMINUS { $$ = newOpNode("-", 0, $2);
+                        printf("Added Tripes of op");
+                         addTriple("-", $2, 0);
+                         addQuadruple("-",$2,0,$$); }
   | id { $$ = newIDNode($1); }
   | INT { $$ = newIntNode($1); }
   | FLOAT { $$ = newDoubleNode($1); }

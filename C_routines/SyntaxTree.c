@@ -14,6 +14,8 @@
 #define ASS_NODE '='
 #define UMINUS_NODE 'M'
 
+int quad=1;
+
 SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
     SyntaxTree *node = malloc(sizeof(SyntaxTree));
     if(!node) {
@@ -39,7 +41,21 @@ SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
     node->value.op = strdup(op);
     node->l = l;
     node->r = r;
-    printf("added new op node: %s\n",op);
+    char code[40000], addr[40];
+    
+    if (node->nodetype==ASS_NODE){
+        sprintf(code, "%s%s%s%s%s\n", l->code, r->code, l->addr, op, r->addr);
+        sprintf(addr,"%s",l->addr);
+    }
+    else{
+        sprintf(addr,"t%d",quad++);
+        sprintf(code, "%s%s%s=%s%s%s\n", l->code, r->code, addr, l->addr, op, r->addr);
+    }
+    node->addr = (char*)malloc(sizeof(strlen(addr)+1));
+    node->code = (char*)malloc(sizeof(strlen(code)+1));
+    node->addr = addr;
+    node->code = code;
+    printf("added new op node: %s with with addr %s and code %s\n",op, node->addr, node->code);
     return node;
 }
 
@@ -51,8 +67,10 @@ SyntaxTree * newDoubleNode(double value){
     }
     node->nodetype = DOUBLE_NODE;
     node->value.doubleval = value;
+    sprintf(node->addr,"%f",value);
     node->l = node->r = NULL;
-    printf("added new double node : %f\n",value);
+    node->code="";
+    printf("added new double node : %f with addr %s and code %s\n",value, node->addr, node->code);
     return node;
 }
 
@@ -64,8 +82,10 @@ SyntaxTree * newIntNode(int value){
     }
     node->nodetype = INT_NODE;
     node->value.intval = value;
+    sprintf(node->addr,"%d",value);
     node->l = node->r = NULL;
-    printf("added new int node : %d\n",value);
+    node->code="";
+    printf("added new int node : %f with addr %s and code %s\n",value, node->addr, node->code);
     return node;
 }
 
@@ -76,9 +96,10 @@ SyntaxTree * newIDNode(char* id){
         exit(1);
     }
     node->nodetype = ID_NODE;
-    node->value.id = strdup(id);
+    node->value.id = node->addr=strdup(id);
     node->l = node->r = NULL;
-    printf("added new id node : %s\n",id);
+    node->code="";
+    printf("added new id node : %s with addr %s and code %s\n",id, node->addr, node->code);
     return node;
 }
 

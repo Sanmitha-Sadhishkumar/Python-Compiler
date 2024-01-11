@@ -5,6 +5,9 @@ Terminals unused in grammar
    relop
    '+'
    '-'
+   '*'
+   '/'
+   '%'
 
 
 State 12 conflicts: 1 shift/reduce
@@ -28,8 +31,11 @@ Grammar
 Terminals, with rules where they appear
 
 $end (0) 0
+'%' (37)
+'*' (42)
 '+' (43)
 '-' (45)
+'/' (47)
 error (256)
 id (258) 1 5
 ID (259)
@@ -47,11 +53,11 @@ UMINUS (266)
 
 Nonterminals, with rules where they appear
 
-$accept (17)
+$accept (20)
     on left: 0
-S (18)
+S (21)
     on left: 1, on right: 0
-E (19)
+E (22)
     on left: 2 3 4 5 6 7, on right: 1 2 3 4
 
 
