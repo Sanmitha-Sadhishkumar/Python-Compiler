@@ -74,6 +74,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "../C_routines/3AddrCode.h"
+
 #define YYERROR_VERBOSE 1
 extern int yylineno;
 extern FILE* yyin;
@@ -82,7 +83,7 @@ int i=0;
 
 
 /* Line 189 of yacc.c  */
-#line 86 "expressions.tab.c"
+#line 87 "expressions.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -128,7 +129,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 13 "expressions.y"
+#line 14 "expressions.y"
 
     char *lexeme;
     char *value;
@@ -140,7 +141,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 144 "expressions.tab.c"
+#line 145 "expressions.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -152,7 +153,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 156 "expressions.tab.c"
+#line 157 "expressions.tab.c"
 
 #ifdef short
 # undef short
@@ -436,7 +437,7 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    43,    46,    47,    51,    52,    53
+       0,    36,    36,    50,    54,    55,    59,    60,    61
 };
 #endif
 
@@ -1339,35 +1340,42 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 35 "expressions.y"
-    { (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), newIDNode((yyvsp[(1) - (3)].lexeme)), (yyvsp[(3) - (3)].Sy));
+#line 36 "expressions.y"
+    { SyntaxTree* id=newIDNode((yyvsp[(1) - (3)].lexeme));
+                  (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), id , (yyvsp[(3) - (3)].Sy));
                   //printSyntaxTree($$); 
-                  int a =addTriple((yyvsp[(2) - (3)].op), newIDNode((yyvsp[(1) - (3)].lexeme)), (yyvsp[(3) - (3)].Sy));
-                  int b= addQuadruple((yyvsp[(2) - (3)].op), (yyvsp[(3) - (3)].Sy), (yyvsp[(3) - (3)].Sy), newIDNode((yyvsp[(1) - (3)].lexeme)));
-                  printT();
+                  SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+                  s->nodetype = -1;
+                  int a =addTriple((yyvsp[(2) - (3)].op), id, s);
+                  int b= addQuadruple((yyvsp[(2) - (3)].op), (yyvsp[(3) - (3)].Sy), s, id);
+                  //printT();
+                  saveTriple();
+                  saveQuadruple();
+                  gen3addr((yyval.Sy));
                   ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 43 "expressions.y"
+#line 50 "expressions.y"
     { (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));
                 int a=addTriple((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));
-                addQuadruple((yyvsp[(2) - (3)].op),(yyvsp[(1) - (3)].Sy),(yyvsp[(3) - (3)].Sy),(yyval.Sy)); ;}
+                addQuadruple((yyvsp[(2) - (3)].op),(yyvsp[(1) - (3)].Sy),(yyvsp[(3) - (3)].Sy),(yyval.Sy));
+                printT(); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 46 "expressions.y"
+#line 54 "expressions.y"
     { (yyval.Sy) = (yyvsp[(2) - (3)].Sy); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 47 "expressions.y"
+#line 55 "expressions.y"
     { (yyval.Sy) = newOpNode("-", 0, (yyvsp[(2) - (2)].Sy));
                         printf("Added Tripes of op");
                          addTriple("-", (yyvsp[(2) - (2)].Sy), 0);
@@ -1377,28 +1385,28 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 51 "expressions.y"
+#line 59 "expressions.y"
     { (yyval.Sy) = newIDNode((yyvsp[(1) - (1)].lexeme)); ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 52 "expressions.y"
+#line 60 "expressions.y"
     { (yyval.Sy) = newIntNode((yyvsp[(1) - (1)].ivalue)); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 53 "expressions.y"
+#line 61 "expressions.y"
     { (yyval.Sy) = newDoubleNode((yyvsp[(1) - (1)].dvalue)); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1402 "expressions.tab.c"
+#line 1410 "expressions.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1610,7 +1618,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 56 "expressions.y"
+#line 64 "expressions.y"
 
 
 void yyerror(const char *s) {

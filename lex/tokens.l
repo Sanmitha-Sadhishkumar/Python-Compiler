@@ -49,5 +49,6 @@ arith [+-/%*]
 %%
 
 int yywrap(){
+  saveST();
   return 1;
 }

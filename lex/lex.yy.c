@@ -1584,5 +1584,6 @@ int main()
 
 
 int yywrap(){
+  saveST();
   return 1;
 }

@@ -21,3 +21,9 @@ int addTriple(char *o, SyntaxTree *a1, SyntaxTree *a2);
 int addQuadruple(char *o, SyntaxTree *a1, SyntaxTree *a2, SyntaxTree *r);
 
 void printT();
+
+void saveTriple();
+
+void saveQuadruple();
+
+void gen3addr(SyntaxTree* head);

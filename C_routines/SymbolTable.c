@@ -41,3 +41,16 @@ int installLit(char *b, char *t){
   STn++;
   return STn-1;
 }
+
+void saveST(){
+  int i;
+  FILE *file = fopen("../Data Structures/SymbolTable.txt","w");
+  fprintf(file, "--------------------------------");
+  fprintf(file, "\n| %7s | %5s | %6s |","Token", "Attribute", "Type");
+  for(i=0;i<STn;i++){
+    fprintf(file, "\n--------------------------------");
+    fprintf(file, "\n| %7s | %9s | %6s |",ST[i].token, ST[i].attr, ST[i].type);
+  }
+  fprintf(file, "\n--------------------------------");
+  fclose(file);
+}

@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "../C_routines/3AddrCode.h"
+
 #define YYERROR_VERBOSE 1
 extern int yylineno;
 extern FILE* yyin;
@@ -32,17 +33,25 @@ int i=0;
 
 %%
 
-S : id assign E { $$ = newOpNode($2, newIDNode($1), $3);
+S : id assign E { SyntaxTree* id=newIDNode($1);
+                  $$ = newOpNode($2, id , $3);
                   //printSyntaxTree($$); 
-                  int a =addTriple($2, newIDNode($1), $3);
-                  int b= addQuadruple($2, $3, $3, newIDNode($1));
-                  printT();
+                  SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+                  s->nodetype = -1;
+                  int a =addTriple($2, id, s);
+                  int b= addQuadruple($2, $3, s, id);
+                  //printT();
+                  saveTriple();
+                  saveQuadruple();
+                  gen3addr($$);
                   }
   ;
 
 E : E arith E { $$ = newOpNode($2, $1, $3);
                 int a=addTriple($2, $1, $3);
-                addQuadruple($2,$1,$3,$$); }
+                addQuadruple($2,$1,$3,$$);
+                printT(); }
+                
   | "(" E ")" { $$ = $2; }
   | "-" E %prec UMINUS { $$ = newOpNode("-", 0, $2);
                         printf("Added Tripes of op");
