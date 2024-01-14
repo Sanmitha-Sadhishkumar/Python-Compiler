@@ -13,3 +13,5 @@ void printST();
 int installID(char *a, char *t);
 
 int installLit(char *b, char *t);
+
+void saveST();

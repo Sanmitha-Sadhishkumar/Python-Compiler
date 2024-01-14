@@ -2,7 +2,10 @@ Terminals unused in grammar
 
    ID
    LITERAL
-   relop
+   logical
+   membership
+   identity
+   bitwise
    '+'
    '-'
    '*'
@@ -10,8 +13,10 @@ Terminals unused in grammar
    '%'
 
 
-State 12 conflicts: 1 shift/reduce
-State 15 conflicts: 1 shift/reduce
+State 11 conflicts: 3 shift/reduce
+State 17 conflicts: 3 shift/reduce
+State 18 conflicts: 3 shift/reduce
+State 19 conflicts: 3 shift/reduce
 
 
 Grammar
@@ -21,11 +26,13 @@ Grammar
     1 S: id assign E
 
     2 E: E arith E
-    3  | "(" E ")"
-    4  | "-" E
-    5  | id
-    6  | INT
-    7  | FLOAT
+    3  | E "-" E
+    4  | E relop E
+    5  | "(" E ")"
+    6  | "-" E
+    7  | id
+    8  | INT
+    9  | FLOAT
 
 
 Terminals, with rules where they appear
@@ -37,28 +44,32 @@ $end (0) 0
 '-' (45)
 '/' (47)
 error (256)
-id (258) 1 5
+id (258) 1 7
 ID (259)
 LITERAL (260)
-FLOAT (261) 7
-INT (262) 6
-relop (263)
+FLOAT (261) 9
+INT (262) 8
+relop (263) 4
 arith (264) 2
 assign (265) 1
-UMINUS (266)
-"(" (267) 3
-")" (268) 3
-"-" (269) 4
+logical (266)
+membership (267)
+identity (268)
+bitwise (269)
+UMINUS (270)
+"-" (271) 3 6
+"(" (272) 5
+")" (273) 5
 
 
 Nonterminals, with rules where they appear
 
-$accept (20)
+$accept (24)
     on left: 0
-S (21)
+S (25)
     on left: 1, on right: 0
-E (22)
-    on left: 2 3 4 5 6 7, on right: 1 2 3 4
+E (26)
+    on left: 2 3 4 5 6 7 8 9, on right: 1 2 3 4 5 6
 
 
 state 0
@@ -91,8 +102,8 @@ state 3
     id     shift, and go to state 5
     FLOAT  shift, and go to state 6
     INT    shift, and go to state 7
-    "("    shift, and go to state 8
-    "-"    shift, and go to state 9
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
 
     E  go to state 10
 
@@ -106,47 +117,47 @@ state 4
 
 state 5
 
-    5 E: id .
-
-    $default  reduce using rule 5 (E)
-
-
-state 6
-
-    7 E: FLOAT .
+    7 E: id .
 
     $default  reduce using rule 7 (E)
 
 
+state 6
+
+    9 E: FLOAT .
+
+    $default  reduce using rule 9 (E)
+
+
 state 7
 
-    6 E: INT .
+    8 E: INT .
 
-    $default  reduce using rule 6 (E)
+    $default  reduce using rule 8 (E)
 
 
 state 8
 
-    3 E: "(" . E ")"
+    6 E: "-" . E
 
     id     shift, and go to state 5
     FLOAT  shift, and go to state 6
     INT    shift, and go to state 7
-    "("    shift, and go to state 8
-    "-"    shift, and go to state 9
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
 
     E  go to state 11
 
 
 state 9
 
-    4 E: "-" . E
+    5 E: "(" . E ")"
 
     id     shift, and go to state 5
     FLOAT  shift, and go to state 6
     INT    shift, and go to state 7
-    "("    shift, and go to state 8
-    "-"    shift, and go to state 9
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
 
     E  go to state 12
 
@@ -155,8 +166,12 @@ state 10
 
     1 S: id assign E .
     2 E: E . arith E
+    3  | E . "-" E
+    4  | E . relop E
 
-    arith  shift, and go to state 13
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
 
     $default  reduce using rule 1 (S)
 
@@ -164,49 +179,125 @@ state 10
 state 11
 
     2 E: E . arith E
-    3  | "(" E . ")"
+    3  | E . "-" E
+    4  | E . relop E
+    6  | "-" E .
 
-    arith  shift, and go to state 13
-    ")"    shift, and go to state 14
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
+
+    relop     [reduce using rule 6 (E)]
+    arith     [reduce using rule 6 (E)]
+    "-"       [reduce using rule 6 (E)]
+    $default  reduce using rule 6 (E)
 
 
 state 12
 
     2 E: E . arith E
-    4  | "-" E .
+    3  | E . "-" E
+    4  | E . relop E
+    5  | "(" E . ")"
 
-    arith  shift, and go to state 13
-
-    arith     [reduce using rule 4 (E)]
-    $default  reduce using rule 4 (E)
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
+    ")"    shift, and go to state 16
 
 
 state 13
+
+    4 E: E relop . E
+
+    id     shift, and go to state 5
+    FLOAT  shift, and go to state 6
+    INT    shift, and go to state 7
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
+
+    E  go to state 17
+
+
+state 14
 
     2 E: E arith . E
 
     id     shift, and go to state 5
     FLOAT  shift, and go to state 6
     INT    shift, and go to state 7
-    "("    shift, and go to state 8
-    "-"    shift, and go to state 9
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
 
-    E  go to state 15
-
-
-state 14
-
-    3 E: "(" E ")" .
-
-    $default  reduce using rule 3 (E)
+    E  go to state 18
 
 
 state 15
 
+    3 E: E "-" . E
+
+    id     shift, and go to state 5
+    FLOAT  shift, and go to state 6
+    INT    shift, and go to state 7
+    "-"    shift, and go to state 8
+    "("    shift, and go to state 9
+
+    E  go to state 19
+
+
+state 16
+
+    5 E: "(" E ")" .
+
+    $default  reduce using rule 5 (E)
+
+
+state 17
+
+    2 E: E . arith E
+    3  | E . "-" E
+    4  | E . relop E
+    4  | E relop E .
+
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
+
+    relop     [reduce using rule 4 (E)]
+    arith     [reduce using rule 4 (E)]
+    "-"       [reduce using rule 4 (E)]
+    $default  reduce using rule 4 (E)
+
+
+state 18
+
     2 E: E . arith E
     2  | E arith E .
+    3  | E . "-" E
+    4  | E . relop E
 
-    arith  shift, and go to state 13
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
 
+    relop     [reduce using rule 2 (E)]
     arith     [reduce using rule 2 (E)]
+    "-"       [reduce using rule 2 (E)]
     $default  reduce using rule 2 (E)
+
+
+state 19
+
+    2 E: E . arith E
+    3  | E . "-" E
+    3  | E "-" E .
+    4  | E . relop E
+
+    relop  shift, and go to state 13
+    arith  shift, and go to state 14
+    "-"    shift, and go to state 15
+
+    relop     [reduce using rule 3 (E)]
+    arith     [reduce using rule 3 (E)]
+    "-"       [reduce using rule 3 (E)]
+    $default  reduce using rule 3 (E)

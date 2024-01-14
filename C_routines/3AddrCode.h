@@ -27,3 +27,5 @@ void saveTriple();
 void saveQuadruple();
 
 void gen3addr(SyntaxTree* head);
+
+int TripleIndex(char* t);

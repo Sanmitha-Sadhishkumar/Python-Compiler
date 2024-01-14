@@ -38,28 +38,30 @@ SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
         fprintf(stderr, "Unknown operation: %s\n", op);
         exit(1);
     }
-    node->value.op = strdup(op);
-    node->l = l;
-    node->r = r;
-    char code[40000], addr[40];
+    char code[40000], addr1[40];
     
     if (node->nodetype==ASS_NODE){
         sprintf(code, "%s%s%s%s%s\n", l->code, r->code, l->addr, op, r->addr);
-        sprintf(addr,"%s",l->addr);
+        strcpy(addr1, r->addr);
     }
     else{
-        sprintf(addr,"t%d",quad++);
-        sprintf(code, "%s%s%s=%s%s%s\n", l->code, r->code, addr, l->addr, op, r->addr);
+        sprintf(addr1,"t%d",quad);
+        sprintf(code, "%s%s%s=%s%s%s\n", l->code, r->code, addr1, l->addr, op, r->addr);
     }
-    node->addr = (char*)malloc(sizeof(strlen(addr)+1));
+    node->addr = (char*)malloc(sizeof(strlen(addr1)+1));
     node->code = (char*)malloc(sizeof(strlen(code)+1));
-    node->addr = addr;
-    node->code = code;
-    printf("added new op node: %s with with addr %s and code %s\n",op, node->addr, node->code);
+    node->addr = strdup(addr1); 
+    node->code = strdup(code);
+    node->value.op = strdup(op);
+    node->l = l;
+    node->r = r;
+    quad++;
+    //printf("\nadded new op node: %s with with addr %s\n",op, node->addr);
     return node;
 }
 
-SyntaxTree * newDoubleNode(double value){
+SyntaxTree * newDoubleNode(char* value){
+    printf("value : %s\n",value);
     SyntaxTree *node = malloc(sizeof(SyntaxTree));
     if(!node) {
         fprintf(stderr, "Out of space\n");
@@ -67,14 +69,18 @@ SyntaxTree * newDoubleNode(double value){
     }
     node->nodetype = DOUBLE_NODE;
     node->value.doubleval = value;
-    sprintf(node->addr,"%f",value);
+    node->addr = malloc(20);
+    sprintf(node->addr, "%s", value);
+    node->code = malloc(1);
+    node->code[0] = '\0'; 
     node->l = node->r = NULL;
     node->code="";
-    printf("added new double node : %f with addr %s and code %s\n",value, node->addr, node->code);
+    printf("added new double node : %s with addr %s and code %s\n",value, node->addr, node->code);
     return node;
 }
 
-SyntaxTree * newIntNode(int value){
+SyntaxTree * newIntNode(char* value){
+    printf("value : %s\n",value);
     SyntaxTree *node = malloc(sizeof(SyntaxTree));
     if(!node) {
         fprintf(stderr, "Out of space\n");
@@ -82,10 +88,13 @@ SyntaxTree * newIntNode(int value){
     }
     node->nodetype = INT_NODE;
     node->value.intval = value;
-    sprintf(node->addr,"%d",value);
+    node->addr = malloc(20);
+    sprintf(node->addr, "%s", value);
+    node->code = malloc(1);
+    node->code[0] = '\0'; 
     node->l = node->r = NULL;
     node->code="";
-    printf("added new int node : %f with addr %s and code %s\n",value, node->addr, node->code);
+    printf("added new int node : %s with addr %s and code %s\n",value, node->addr, node->code);
     return node;
 }
 
@@ -99,7 +108,7 @@ SyntaxTree * newIDNode(char* id){
     node->value.id = node->addr=strdup(id);
     node->l = node->r = NULL;
     node->code="";
-    printf("added new id node : %s with addr %s and code %s\n",id, node->addr, node->code);
+    //printf("added new id node : %s with addr %s and code %s\n",id, node->addr, node->code);
     return node;
 }
 
@@ -163,3 +172,8 @@ void printSyntaxTree(SyntaxTree *head) {
     }
 }
 
+void printNode(SyntaxTree* a){
+    printf("\nNodetype : %d",a->nodetype);
+    printf("\nAddr : %s",a->addr);
+    printf("\ncode : %s",a->code);
+}

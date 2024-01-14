@@ -6,8 +6,8 @@ typedef struct SyntaxTree {
     int nodetype;
     union {
         char *id;
-        int intval;
-        double doubleval;
+        char* intval;
+        char* doubleval;
         char *op;
     } value;
     char *addr;
@@ -19,9 +19,9 @@ typedef struct SyntaxTree {
 
 SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r);
 
-SyntaxTree * newDoubleNode(double value);
+SyntaxTree * newDoubleNode(char* value);
 
-SyntaxTree * newIntNode(int value);
+SyntaxTree * newIntNode(char* value);
 
 SyntaxTree * newIDNode(char* id);
 
@@ -30,3 +30,5 @@ double eval(SyntaxTree *a);
 void treefree(SyntaxTree *a);
 
 void printSyntaxTree(SyntaxTree * head);
+
+void printNode(SyntaxTree* a);

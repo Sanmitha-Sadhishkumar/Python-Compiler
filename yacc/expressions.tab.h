@@ -47,7 +47,11 @@
      relop = 263,
      arith = 264,
      assign = 265,
-     UMINUS = 266
+     logical = 266,
+     membership = 267,
+     identity = 268,
+     bitwise = 269,
+     UMINUS = 270
    };
 #endif
 
@@ -70,7 +74,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 74 "expressions.tab.h"
+#line 78 "expressions.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

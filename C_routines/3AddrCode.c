@@ -8,24 +8,42 @@ int t=0;
 quadruple Q[1000];
 int q=0;
 
+int TripleIndex(char* t){
+  int i;
+  for(i=0;i<q;i++){
+    if(strcmp(t,Q[i].res)==0)
+      return i;
+  }
+  return -1;
+}
+
 int addTriple(char *o, SyntaxTree *a1, SyntaxTree *a2){
     T[t].op = (char*)malloc(sizeof(o));
     T[t].arg1 = (char*)malloc(strlen(a1->addr) + 1);
     strcpy(T[t].op, o);
-    strcpy(T[t].arg1, a1->addr);
+    int t1index = TripleIndex(a1->addr);
+    if (t1index==-1)
+      strcpy(T[t].arg1, a1->addr);
+    else
+      sprintf(T[t].arg1, "( %d )", t1index);
     if(a2->nodetype==-1){
       T[t].arg2 = (char*)malloc(strlen("None") + 1);
       strcpy(T[t].arg2, "None");
     } else {
+      int t2index = TripleIndex(a2->addr);
       T[t].arg2 = (char*)malloc(strlen(a2->addr) + 1);
-      strcpy(T[t].arg2, a2->addr);
+      if (t2index==-1){
+        strcpy(T[t].arg2, a2->addr);
+      }
+      else{
+        sprintf(T[t].arg2, "( %d )", t2index);
+      }
     }
     t++;
     return t-1;
 }
 
 int addQuadruple(char *o, SyntaxTree *a1, SyntaxTree *a2, SyntaxTree *r){
-    printf("\n%s : %s :", o, a1->addr);
     Q[q].op = (char*)malloc(sizeof(o));
     Q[q].arg1 = (char*)malloc(strlen(a1->addr) + 1);
     if(a2->nodetype==-1){
@@ -58,27 +76,27 @@ void printT(){
 
 void saveTriple(){
   FILE *file = fopen("../Data Structures/Triples.txt","w");
-  fprintf(file, "--------------------------");
-  fprintf(file, "\n| %s | %s | %s |","Operator", "Arg1", "Arg2");
+  fprintf(file, "------------------------------------------");
+  fprintf(file, "\n| %s | %s | %8s | %8s |", "Index", "Operator", "Arg1", "Arg2");
   int i;
   for(i=0;i<t;i++){
-    fprintf(file, "\n--------------------------");
-    fprintf(file, "\n| %8s | %4s | %4s |",T[i].op, T[i].arg1, T[i].arg2);
+    fprintf(file, "\n------------------------------------------");
+    fprintf(file, "\n| %5d | %8s | %8s | %8s |", i, T[i].op, T[i].arg1, T[i].arg2);
   }
-  fprintf(file, "\n--------------------------");
+  fprintf(file, "\n------------------------------------------");
   fclose(file);
 }
 
 void saveQuadruple(){
   FILE *file = fopen("../Data Structures/Quadruple.txt","w");
-  fprintf(file, "--------------------------------");
-  fprintf(file, "\n| %s | %s | %s | %s |","Operator", "Arg1", "Arg2", "Res");
+  fprintf(file, "-----------------------------------------------------");
+  fprintf(file, "\n| %s | %s | %8s | %8s | %8s |","Index","Operator", "Arg1", "Arg2", "Res");
   int i;
   for(i=0;i<q;i++){
-    fprintf(file, "\n--------------------------------");
-    fprintf(file, "\n| %8s | %4s | %4s | %3s |",Q[i].op, Q[i].arg1, Q[i].arg2, Q[i].res);
+    fprintf(file, "\n-----------------------------------------------------");
+    fprintf(file, "\n| %5d | %8s | %8s | %8s | %8s |", i, Q[i].op, Q[i].arg1, Q[i].arg2, Q[i].res);
   }
-  fprintf(file, "\n--------------------------------");
+  fprintf(file, "\n-----------------------------------------------------");
   fclose(file);
 }
 
