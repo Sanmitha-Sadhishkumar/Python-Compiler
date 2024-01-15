@@ -23,7 +23,11 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 
 %%
 
-{id}        {int a = installID(yytext, "ID"); yylval.lexeme = strdup(yytext); return id; }
+"if"        {yylval.key = strdup(yytext); return IF;}
+
+"True"      {yylval.key = strdup(yytext); return TRUE;}
+
+"False"     {yylval.key = strdup(yytext); return FALSE;}
 
 {INT}       {int a = installLit(yytext,"INT"); yylval.value = strdup(yytext); return INT;}
 
@@ -42,9 +46,9 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 "-"         { yylval.op = strdup(yytext); return "-"; }
 "**"        { yylval.op = strdup(yytext); return arith; }
 
-"and"       {yylval.op = strdup(yytext); return logical;}
-"or"        {yylval.op = strdup(yytext); return logical;}
-"not"       {yylval.op = strdup(yytext); return logical;}
+"and"       {yylval.op = strdup(yytext); return AND;}
+"or"        {yylval.op = strdup(yytext); return OR;}
+"not"       {yylval.op = strdup(yytext); return NOT;}
 
 "in"        {yylval.op = strdup(yytext); return membership;}
 "not in"    {yylval.op = strdup(yytext); return membership;}
@@ -59,6 +63,15 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 "^"         {yylval.op = strdup(yytext); return bitwise;}
 ">>"        {yylval.op = strdup(yytext); return bitwise;}
 "<<"        {yylval.op = strdup(yytext); return bitwise;}
+
+":"         {yylval.delim = strdup(yytext); return COLON;}
+"\t"+       {yylval.delim = strdup(yytext); return SPACE;}
+"    "        {yylval.delim = strdup(yytext); return SPACE;}
+"\n"        {yylval.delim = strdup(yytext); return NL;}
+"("         {yylval.delim = strdup(yytext); return "(";}
+")"         {yylval.delim = strdup(yytext); return ")";}
+
+{id}        {int a = installID(yytext, "ID"); yylval.lexeme = strdup(yytext); return id; }
 
 <<EOF>>     {saveST(); return 0;}
 

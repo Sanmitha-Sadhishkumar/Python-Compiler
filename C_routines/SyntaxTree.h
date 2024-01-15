@@ -11,6 +11,9 @@ typedef struct SyntaxTree {
         char *op;
     } value;
     char *addr;
+    char *True;
+    char *False;
+    char* next;
     char *code;
     struct SyntaxTree *l;
     struct SyntaxTree *r;
@@ -25,10 +28,10 @@ SyntaxTree * newIntNode(char* value);
 
 SyntaxTree * newIDNode(char* id);
 
-double eval(SyntaxTree *a);
-
-void treefree(SyntaxTree *a);
-
 void printSyntaxTree(SyntaxTree * head);
 
 void printNode(SyntaxTree* a);
+
+SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r);
+
+SyntaxTree* newBoolExp(char *op, SyntaxTree *l, SyntaxTree *r);

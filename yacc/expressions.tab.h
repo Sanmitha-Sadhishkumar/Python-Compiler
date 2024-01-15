@@ -47,11 +47,25 @@
      relop = 263,
      arith = 264,
      assign = 265,
-     logical = 266,
-     membership = 267,
-     identity = 268,
-     bitwise = 269,
-     UMINUS = 270
+     AND = 266,
+     OR = 267,
+     NOT = 268,
+     membership = 269,
+     identity = 270,
+     bitwise = 271,
+     IF = 272,
+     ELSE = 273,
+     ELIF = 274,
+     WHILE = 275,
+     FOR = 276,
+     TRUE = 277,
+     FALSE = 278,
+     DELIMITER = 279,
+     COLON = 280,
+     TAB = 281,
+     NL = 282,
+     SPACE = 283,
+     UMINUS = 284
    };
 #endif
 
@@ -70,11 +84,13 @@ typedef union YYSTYPE
     struct SyntaxTree *Sy;
     int ivalue;
     char *op;
+    char *key;
+    char *delim;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 78 "expressions.tab.h"
+#line 94 "expressions.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
