@@ -159,7 +159,7 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
            }
 
         } else if (strcmp(node->value.op, "not") == 0) {
-            sprintf(code, "%sif not %s: goto %s", node->l->code, node->l->addr, node->True);
+            sprintf(code, "%sif not %s: goto %s\n", node->l->code, node->l->addr, node->True);
         }
         sprintf(code, "%s %s", strdup(lcode),  strdup(rcode));
         node->code = strdup(code);
@@ -185,7 +185,7 @@ SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r){
     sprintf(node->True, "%s", l->True);
     sprintf(node->False, "%s", l->False);
     sprintf(node->next, "L%d", label++);
-    sprintf(code, "%s%s", l->code, r->code);
+    sprintf(code, "%s\n%s :%s",  l->code, l->True, r->code);
     node->code = strdup(code);
     return node;
 }

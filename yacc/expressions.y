@@ -44,7 +44,10 @@ int i=0;
 %%
 
 S : if_statement else_elif{ $$ = newElseNode($1, $2);
-                            printNode($$);}
+                            printNode($$);
+                            saveTriple();
+                            saveQuadruple();
+                            gen3addr($$);}
   | /* empty */
   ;
 
@@ -73,9 +76,6 @@ S : id assign E { SyntaxTree* id=newIDNode($1);
                   s->nodetype = -1;
                   addTriple($2, $3, s);
                   addQuadruple($2, $3, s, id);
-                  saveTriple();
-                  saveQuadruple();
-                  gen3addr($$);
                   }
   ;
 

@@ -465,8 +465,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    46,    46,    48,    51,    56,    59,    62,    63,    64,
-      65,    66,    67,    70,    82,    87,    92,    97,    98,   101,
+       0,    46,    46,    51,    54,    59,    62,    65,    66,    67,
+      68,    69,    70,    73,    82,    87,    92,    97,    98,   101,
      102,   103
 };
 #endif
@@ -1398,13 +1398,16 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 46 "expressions.y"
     { (yyval.Sy) = newElseNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));
-                            printNode((yyval.Sy));;}
+                            printNode((yyval.Sy));
+                            saveTriple();
+                            saveQuadruple();
+                            gen3addr((yyval.Sy));;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 51 "expressions.y"
+#line 54 "expressions.y"
     {  newBoolLabelNode("root", (yyvsp[(2) - (7)].Sy));
                                           newBoolExp((yyvsp[(2) - (7)].Sy));
                                           (yyval.Sy) = newIfNode((yyvsp[(1) - (7)].key), (yyvsp[(2) - (7)].Sy), (yyvsp[(6) - (7)].Sy));
@@ -1414,7 +1417,7 @@ yyreduce:
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 56 "expressions.y"
+#line 59 "expressions.y"
     { (yyval.Sy) = (yyvsp[(5) - (5)].Sy);
                                      //$2.true = newlabel();$2.false = newlabel();  $4.next  = $6.next =$$.next; $$.code = $2.code || label($2.true) || $4.code || gen('goto' $$.next) || label($2.false) || $6.code;
                                      ;}
@@ -1423,65 +1426,62 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 59 "expressions.y"
+#line 62 "expressions.y"
     {;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 62 "expressions.y"
+#line 65 "expressions.y"
     { (yyval.Sy) = newBoolJoinNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 63 "expressions.y"
+#line 66 "expressions.y"
     { (yyval.Sy) = newBoolJoinNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 64 "expressions.y"
+#line 67 "expressions.y"
     { SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 65 "expressions.y"
+#line 68 "expressions.y"
     { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 66 "expressions.y"
+#line 69 "expressions.y"
     {/*$$.code = gen('goto' $$.true) ;*/;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 67 "expressions.y"
+#line 70 "expressions.y"
     {/*$$.code = gen('goto' $$.false) ;*/;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 70 "expressions.y"
+#line 73 "expressions.y"
     { SyntaxTree* id=newIDNode((yyvsp[(1) - (3)].lexeme));
                   (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), id , (yyvsp[(3) - (3)].Sy));
                   SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
                   s->nodetype = -1;
                   addTriple((yyvsp[(2) - (3)].op), (yyvsp[(3) - (3)].Sy), s);
                   addQuadruple((yyvsp[(2) - (3)].op), (yyvsp[(3) - (3)].Sy), s, id);
-                  saveTriple();
-                  saveQuadruple();
-                  gen3addr((yyval.Sy));
                   ;}
     break;
 
