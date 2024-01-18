@@ -1,8 +1,3 @@
-Nonterminals useless in grammar
-
-   else_elif
-
-
 Terminals unused in grammar
 
    ID
@@ -10,8 +5,6 @@ Terminals unused in grammar
    membership
    identity
    bitwise
-   ELSE
-   ELIF
    WHILE
    FOR
    DELIMITER
@@ -23,48 +16,41 @@ Terminals unused in grammar
    '%'
 
 
-Rules useless in grammar
-
-   19 else_elif: ELSE S
-   20          | ELIF S
-   21          | /* empty */
-
-
-State 18 conflicts: 2 shift/reduce
-State 19 conflicts: 3 shift/reduce
-State 28 conflicts: 2 shift/reduce
-State 29 conflicts: 2 shift/reduce
-State 31 conflicts: 3 shift/reduce
-State 32 conflicts: 3 shift/reduce
-State 33 conflicts: 3 shift/reduce
+State 22 conflicts: 1 shift/reduce
+State 36 conflicts: 1 shift/reduce
+State 37 conflicts: 1 shift/reduce
+State 38 conflicts: 3 shift/reduce
 
 
 Grammar
 
     0 $accept: S $end
 
-    1 S: if_statement
+    1 S: if_statement else_elif
     2  | /* empty */
 
-    3 if_statement: IF B COLON NL SPACE S
+    3 if_statement: IF B COLON NL SPACE S NL
 
-    4 B: B OR B
-    5  | B AND B
-    6  | NOT B
-    7  | E
-    8  | TRUE
-    9  | FALSE
+    4 else_elif: ELSE COLON NL SPACE S
+    5          | ELIF S
 
-   10 S: id assign E
+    6 B: B OR B
+    7  | B AND B
+    8  | NOT B
+    9  | E
+   10  | TRUE
+   11  | FALSE
 
-   11 E: E arith E
-   12  | E "-" E
-   13  | E relop E
-   14  | "(" E ")"
-   15  | "-" E
-   16  | id
-   17  | INT
-   18  | FLOAT
+   12 S: id assign E
+
+   13 E: E arith E
+   14  | E "-" E
+   15  | E relop E
+   16  | "(" E ")"
+   17  | "-" E
+   18  | id
+   19  | INT
+   20  | FLOAT
 
 
 Terminals, with rules where they appear
@@ -76,36 +62,36 @@ $end (0) 0
 '-' (45)
 '/' (47)
 error (256)
-id (258) 10 16
+id (258) 12 18
 ID (259)
 LITERAL (260)
-FLOAT (261) 18
-INT (262) 17
-relop (263) 13
-arith (264) 11
-assign (265) 10
-AND (266) 5
-OR (267) 4
-NOT (268) 6
+FLOAT (261) 20
+INT (262) 19
+relop (263) 15
+arith (264) 13
+assign (265) 12
+AND (266) 7
+OR (267) 6
+NOT (268) 8
 membership (269)
 identity (270)
 bitwise (271)
 IF (272) 3
-ELSE (273)
-ELIF (274)
+ELSE (273) 4
+ELIF (274) 5
 WHILE (275)
 FOR (276)
-TRUE (277) 8
-FALSE (278) 9
+TRUE (277) 10
+FALSE (278) 11
 DELIMITER (279)
-COLON (280) 3
+COLON (280) 3 4
 TAB (281)
-NL (282) 3
-SPACE (283) 3
+NL (282) 3 4
+SPACE (283) 3 4
 UMINUS (284)
-"-" (285) 12 15
-"(" (286) 14
-")" (287) 14
+"-" (285) 14 17
+"(" (286) 16
+")" (287) 16
 
 
 Nonterminals, with rules where they appear
@@ -113,13 +99,15 @@ Nonterminals, with rules where they appear
 $accept (38)
     on left: 0
 S (39)
-    on left: 1 2 10, on right: 0 3
+    on left: 1 2 12, on right: 0 3 4 5
 if_statement (40)
     on left: 3, on right: 1
-B (41)
-    on left: 4 5 6 7 8 9, on right: 3 4 5 6
-E (42)
-    on left: 11 12 13 14 15 16 17 18, on right: 7 10 11 12 13 14 15
+else_elif (41)
+    on left: 4 5, on right: 1
+B (42)
+    on left: 6 7 8 9 10 11, on right: 3 6 7 8
+E (43)
+    on left: 13 14 15 16 17 18 19 20, on right: 9 12 13 14 15 16 17
 
 
 state 0
@@ -137,14 +125,14 @@ state 0
 
 state 1
 
-   10 S: id . assign E
+   12 S: id . assign E
 
     assign  shift, and go to state 5
 
 
 state 2
 
-    3 if_statement: IF . B COLON NL SPACE S
+    3 if_statement: IF . B COLON NL SPACE S NL
 
     id     shift, and go to state 6
     FLOAT  shift, and go to state 7
@@ -168,92 +156,17 @@ state 3
 
 state 4
 
-    1 S: if_statement .
+    1 S: if_statement . else_elif
 
-    $default  reduce using rule 1 (S)
+    ELSE  shift, and go to state 17
+    ELIF  shift, and go to state 18
+
+    else_elif  go to state 19
 
 
 state 5
 
-   10 S: id assign . E
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    E  go to state 17
-
-
-state 6
-
-   16 E: id .
-
-    $default  reduce using rule 16 (E)
-
-
-state 7
-
-   18 E: FLOAT .
-
-    $default  reduce using rule 18 (E)
-
-
-state 8
-
-   17 E: INT .
-
-    $default  reduce using rule 17 (E)
-
-
-state 9
-
-    6 B: NOT . B
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    NOT    shift, and go to state 9
-    TRUE   shift, and go to state 10
-    FALSE  shift, and go to state 11
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    B  go to state 18
-    E  go to state 15
-
-
-state 10
-
-    8 B: TRUE .
-
-    $default  reduce using rule 8 (B)
-
-
-state 11
-
-    9 B: FALSE .
-
-    $default  reduce using rule 9 (B)
-
-
-state 12
-
-   15 E: "-" . E
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    E  go to state 19
-
-
-state 13
-
-   14 E: "(" . E ")"
+   12 S: id assign . E
 
     id     shift, and go to state 6
     FLOAT  shift, and go to state 7
@@ -264,29 +177,107 @@ state 13
     E  go to state 20
 
 
+state 6
+
+   18 E: id .
+
+    $default  reduce using rule 18 (E)
+
+
+state 7
+
+   20 E: FLOAT .
+
+    $default  reduce using rule 20 (E)
+
+
+state 8
+
+   19 E: INT .
+
+    $default  reduce using rule 19 (E)
+
+
+state 9
+
+    8 B: NOT . B
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    NOT    shift, and go to state 9
+    TRUE   shift, and go to state 10
+    FALSE  shift, and go to state 11
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    B  go to state 21
+    E  go to state 15
+
+
+state 10
+
+   10 B: TRUE .
+
+    $default  reduce using rule 10 (B)
+
+
+state 11
+
+   11 B: FALSE .
+
+    $default  reduce using rule 11 (B)
+
+
+state 12
+
+   17 E: "-" . E
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    E  go to state 22
+
+
+state 13
+
+   16 E: "(" . E ")"
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    E  go to state 23
+
+
 state 14
 
-    3 if_statement: IF B . COLON NL SPACE S
-    4 B: B . OR B
-    5  | B . AND B
+    3 if_statement: IF B . COLON NL SPACE S NL
+    6 B: B . OR B
+    7  | B . AND B
 
-    AND    shift, and go to state 21
-    OR     shift, and go to state 22
-    COLON  shift, and go to state 23
+    AND    shift, and go to state 24
+    OR     shift, and go to state 25
+    COLON  shift, and go to state 26
 
 
 state 15
 
-    7 B: E .
-   11 E: E . arith E
-   12  | E . "-" E
-   13  | E . relop E
+    9 B: E .
+   13 E: E . arith E
+   14  | E . "-" E
+   15  | E . relop E
 
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
+    relop  shift, and go to state 27
+    arith  shift, and go to state 28
+    "-"    shift, and go to state 29
 
-    $default  reduce using rule 7 (B)
+    $default  reduce using rule 9 (B)
 
 
 state 16
@@ -298,250 +289,301 @@ state 16
 
 state 17
 
-   10 S: id assign E .
-   11 E: E . arith E
-   12  | E . "-" E
-   13  | E . relop E
+    4 else_elif: ELSE . COLON NL SPACE S
 
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-
-    $default  reduce using rule 10 (S)
+    COLON  shift, and go to state 30
 
 
 state 18
 
-    4 B: B . OR B
-    5  | B . AND B
-    6  | NOT B .
-
-    AND  shift, and go to state 21
-    OR   shift, and go to state 22
-
-    AND       [reduce using rule 6 (B)]
-    OR        [reduce using rule 6 (B)]
-    $default  reduce using rule 6 (B)
-
-
-state 19
-
-   11 E: E . arith E
-   12  | E . "-" E
-   13  | E . relop E
-   15  | "-" E .
-
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-
-    relop     [reduce using rule 15 (E)]
-    arith     [reduce using rule 15 (E)]
-    "-"       [reduce using rule 15 (E)]
-    $default  reduce using rule 15 (E)
-
-
-state 20
-
-   11 E: E . arith E
-   12  | E . "-" E
-   13  | E . relop E
-   14  | "(" E . ")"
-
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-    ")"    shift, and go to state 27
-
-
-state 21
-
-    5 B: B AND . B
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    NOT    shift, and go to state 9
-    TRUE   shift, and go to state 10
-    FALSE  shift, and go to state 11
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    B  go to state 28
-    E  go to state 15
-
-
-state 22
-
-    4 B: B OR . B
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    NOT    shift, and go to state 9
-    TRUE   shift, and go to state 10
-    FALSE  shift, and go to state 11
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    B  go to state 29
-    E  go to state 15
-
-
-state 23
-
-    3 if_statement: IF B COLON . NL SPACE S
-
-    NL  shift, and go to state 30
-
-
-state 24
-
-   13 E: E relop . E
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    E  go to state 31
-
-
-state 25
-
-   11 E: E arith . E
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    E  go to state 32
-
-
-state 26
-
-   12 E: E "-" . E
-
-    id     shift, and go to state 6
-    FLOAT  shift, and go to state 7
-    INT    shift, and go to state 8
-    "-"    shift, and go to state 12
-    "("    shift, and go to state 13
-
-    E  go to state 33
-
-
-state 27
-
-   14 E: "(" E ")" .
-
-    $default  reduce using rule 14 (E)
-
-
-state 28
-
-    4 B: B . OR B
-    5  | B . AND B
-    5  | B AND B .
-
-    AND  shift, and go to state 21
-    OR   shift, and go to state 22
-
-    AND       [reduce using rule 5 (B)]
-    OR        [reduce using rule 5 (B)]
-    $default  reduce using rule 5 (B)
-
-
-state 29
-
-    4 B: B . OR B
-    4  | B OR B .
-    5  | B . AND B
-
-    AND  shift, and go to state 21
-    OR   shift, and go to state 22
-
-    AND       [reduce using rule 4 (B)]
-    OR        [reduce using rule 4 (B)]
-    $default  reduce using rule 4 (B)
-
-
-state 30
-
-    3 if_statement: IF B COLON NL . SPACE S
-
-    SPACE  shift, and go to state 34
-
-
-state 31
-
-   11 E: E . arith E
-   12  | E . "-" E
-   13  | E . relop E
-   13  | E relop E .
-
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-
-    relop     [reduce using rule 13 (E)]
-    arith     [reduce using rule 13 (E)]
-    "-"       [reduce using rule 13 (E)]
-    $default  reduce using rule 13 (E)
-
-
-state 32
-
-   11 E: E . arith E
-   11  | E arith E .
-   12  | E . "-" E
-   13  | E . relop E
-
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-
-    relop     [reduce using rule 11 (E)]
-    arith     [reduce using rule 11 (E)]
-    "-"       [reduce using rule 11 (E)]
-    $default  reduce using rule 11 (E)
-
-
-state 33
-
-   11 E: E . arith E
-   12  | E . "-" E
-   12  | E "-" E .
-   13  | E . relop E
-
-    relop  shift, and go to state 24
-    arith  shift, and go to state 25
-    "-"    shift, and go to state 26
-
-    relop     [reduce using rule 12 (E)]
-    arith     [reduce using rule 12 (E)]
-    "-"       [reduce using rule 12 (E)]
-    $default  reduce using rule 12 (E)
-
-
-state 34
-
-    3 if_statement: IF B COLON NL SPACE . S
+    5 else_elif: ELIF . S
 
     id  shift, and go to state 1
     IF  shift, and go to state 2
 
     $default  reduce using rule 2 (S)
 
-    S             go to state 35
+    S             go to state 31
     if_statement  go to state 4
+
+
+state 19
+
+    1 S: if_statement else_elif .
+
+    $default  reduce using rule 1 (S)
+
+
+state 20
+
+   12 S: id assign E .
+   13 E: E . arith E
+   14  | E . "-" E
+   15  | E . relop E
+
+    relop  shift, and go to state 27
+    arith  shift, and go to state 28
+    "-"    shift, and go to state 29
+
+    $default  reduce using rule 12 (S)
+
+
+state 21
+
+    6 B: B . OR B
+    7  | B . AND B
+    8  | NOT B .
+
+    $default  reduce using rule 8 (B)
+
+
+state 22
+
+   13 E: E . arith E
+   14  | E . "-" E
+   15  | E . relop E
+   17  | "-" E .
+
+    "-"  shift, and go to state 29
+
+    "-"       [reduce using rule 17 (E)]
+    $default  reduce using rule 17 (E)
+
+
+state 23
+
+   13 E: E . arith E
+   14  | E . "-" E
+   15  | E . relop E
+   16  | "(" E . ")"
+
+    relop  shift, and go to state 27
+    arith  shift, and go to state 28
+    "-"    shift, and go to state 29
+    ")"    shift, and go to state 32
+
+
+state 24
+
+    7 B: B AND . B
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    NOT    shift, and go to state 9
+    TRUE   shift, and go to state 10
+    FALSE  shift, and go to state 11
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    B  go to state 33
+    E  go to state 15
+
+
+state 25
+
+    6 B: B OR . B
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    NOT    shift, and go to state 9
+    TRUE   shift, and go to state 10
+    FALSE  shift, and go to state 11
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    B  go to state 34
+    E  go to state 15
+
+
+state 26
+
+    3 if_statement: IF B COLON . NL SPACE S NL
+
+    NL  shift, and go to state 35
+
+
+state 27
+
+   15 E: E relop . E
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    E  go to state 36
+
+
+state 28
+
+   13 E: E arith . E
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    E  go to state 37
+
+
+state 29
+
+   14 E: E "-" . E
+
+    id     shift, and go to state 6
+    FLOAT  shift, and go to state 7
+    INT    shift, and go to state 8
+    "-"    shift, and go to state 12
+    "("    shift, and go to state 13
+
+    E  go to state 38
+
+
+state 30
+
+    4 else_elif: ELSE COLON . NL SPACE S
+
+    NL  shift, and go to state 39
+
+
+state 31
+
+    5 else_elif: ELIF S .
+
+    $default  reduce using rule 5 (else_elif)
+
+
+state 32
+
+   16 E: "(" E ")" .
+
+    $default  reduce using rule 16 (E)
+
+
+state 33
+
+    6 B: B . OR B
+    7  | B . AND B
+    7  | B AND B .
+
+    $default  reduce using rule 7 (B)
+
+
+state 34
+
+    6 B: B . OR B
+    6  | B OR B .
+    7  | B . AND B
+
+    AND  shift, and go to state 24
+
+    $default  reduce using rule 6 (B)
 
 
 state 35
 
-    3 if_statement: IF B COLON NL SPACE S .
+    3 if_statement: IF B COLON NL . SPACE S NL
+
+    SPACE  shift, and go to state 40
+
+
+state 36
+
+   13 E: E . arith E
+   14  | E . "-" E
+   15  | E . relop E
+   15  | E relop E .
+
+    arith  shift, and go to state 28
+    "-"    shift, and go to state 29
+
+    "-"       [reduce using rule 15 (E)]
+    $default  reduce using rule 15 (E)
+
+
+state 37
+
+   13 E: E . arith E
+   13  | E arith E .
+   14  | E . "-" E
+   15  | E . relop E
+
+    "-"  shift, and go to state 29
+
+    "-"       [reduce using rule 13 (E)]
+    $default  reduce using rule 13 (E)
+
+
+state 38
+
+   13 E: E . arith E
+   14  | E . "-" E
+   14  | E "-" E .
+   15  | E . relop E
+
+    relop  shift, and go to state 27
+    arith  shift, and go to state 28
+    "-"    shift, and go to state 29
+
+    relop     [reduce using rule 14 (E)]
+    arith     [reduce using rule 14 (E)]
+    "-"       [reduce using rule 14 (E)]
+    $default  reduce using rule 14 (E)
+
+
+state 39
+
+    4 else_elif: ELSE COLON NL . SPACE S
+
+    SPACE  shift, and go to state 41
+
+
+state 40
+
+    3 if_statement: IF B COLON NL SPACE . S NL
+
+    id  shift, and go to state 1
+    IF  shift, and go to state 2
+
+    $default  reduce using rule 2 (S)
+
+    S             go to state 42
+    if_statement  go to state 4
+
+
+state 41
+
+    4 else_elif: ELSE COLON NL SPACE . S
+
+    id  shift, and go to state 1
+    IF  shift, and go to state 2
+
+    $default  reduce using rule 2 (S)
+
+    S             go to state 43
+    if_statement  go to state 4
+
+
+state 42
+
+    3 if_statement: IF B COLON NL SPACE S . NL
+
+    NL  shift, and go to state 44
+
+
+state 43
+
+    4 else_elif: ELSE COLON NL SPACE S .
+
+    $default  reduce using rule 4 (else_elif)
+
+
+state 44
+
+    3 if_statement: IF B COLON NL SPACE S NL .
 
     $default  reduce using rule 3 (if_statement)

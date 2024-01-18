@@ -6,11 +6,6 @@
 #define ID_NODE 'I'
 #define INT_NODE 'D'
 #define DOUBLE_NODE 'F'
-#define PLUS_NODE '+'
-#define MINUS_NODE '-'
-#define MUL_NODE '*'
-#define DIV_NODE '/'
-#define MOD_NODE '%'
 #define ASS_NODE '='
 #define AR_NODE '+'
 #define REL_NODE '>'
@@ -20,6 +15,7 @@
 #define BIT_NODE '&'
 #define UMINUS_NODE 'M'
 #define IF_NODE 'e'
+#define ELSE_NODE 'E'
 
 int quad=1;
 int label =1;
@@ -133,100 +129,47 @@ SyntaxTree * newIDNode(char* id){
 }
 
 
-SyntaxTree* newBoolExp(char *op, SyntaxTree *l, SyntaxTree *r){
-    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
-    if(!node) {
-        fprintf(stderr, "Out of space\n");
-        exit(1);
+SyntaxTree* newBoolExp(SyntaxTree *node){
+    if ((node!=NULL) && (node->nodetype==LOG_NODE)){
+        newBoolExp(node->l);
+        newBoolExp(node->r);
+        char lcode[4000], rcode[4000], code[10000];
+    
+        if (strcmp(node->value.op, "or") == 0) {
+            if((node->l->nodetype==LOG_NODE)){
+                sprintf(lcode, "%s\n%s : ", strdup(node->l->code), node->l->False);
+            } else {
+                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s: ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->True);
+            }
+            if((node->r->nodetype==LOG_NODE)){
+                sprintf(rcode, "%s\n%s : ", strdup(node->r->code), node->r->True);
+            } else {
+                sprintf(rcode, "%sif %s : goto %s\n goto %s", node->r->code, node->r->addr, node->r->True, node->r->False);
+            }
+        } else if (strcmp(node->value.op, "and") == 0) {
+            if((node->l->nodetype==LOG_NODE)){
+                sprintf(lcode, "%s\n%s : ", strdup(node->l->code), node->l->True);
+            } else {
+                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s: ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->True);
+            }
+            if((node->r->nodetype==LOG_NODE)){
+                sprintf(rcode, "%s\n%s : ", strdup(node->r->code), node->r->False);
+            } else {
+                sprintf(rcode, "%sif %s : goto %s\n goto %s", node->r->code, node->r->addr, node->r->True, node->r->False);
+           }
+
+        } else if (strcmp(node->value.op, "not") == 0) {
+            sprintf(code, "%sif not %s: goto %s", node->l->code, node->l->addr, node->True);
+        }
+        sprintf(code, "%s %s", strdup(lcode),  strdup(rcode));
+        node->code = strdup(code);
+        node->addr = NULL;
+    //printf("\n\n%s : %s", op, node->code);
+        return node;
     }
-    
-    node->nodetype = LOG_NODE;
-    
-    node->True = malloc(10);
-    node->False = malloc(10);
-    l->True = malloc(10);
-    l->False = malloc(10);
-    char lcode[4000], rcode[4000], code[10000];
-    
-    if (strcmp(op, "or") == 0) {
-        sprintf(node->True, "L%d", label++);
-        sprintf(node->False, "L%d", label++);
-
-        if((l->addr==NULL)){
-            node->False=strdup(l->False); 
-            sprintf(lcode, "%s", strdup(l->code));
-        } 
-        
-        if((r->True!=NULL)){
-            node->True=strdup(r->True); 
-            sprintf(rcode, "%s", strdup(r->code));
-        } 
-        
-        if ((l->addr!=NULL)) {
-            l->True = malloc(10);
-            l->False = malloc(10);
-            l->True=strdup(node->True); 
-            sprintf(l->False, "L%d", label++);
-            sprintf(lcode, "%sif %s : goto %s\n%s: ", l->code, l->addr, node->True, l->False);
-        }
-        
-        if ((r->True==NULL)) {
-            r->True = malloc(10);
-            r->False = malloc(10);
-            r->True=strdup(node->True); 
-            r->False = strdup(node->False);
-            sprintf(rcode, "%sif %s : goto %s", r->code, r->addr, node->True);
-        }
-        node->l = l;
-        node->r = r;
-
-    } else if (strcmp(op, "and") == 0) {
-        sprintf(node->True, "L%d", label++);
-        sprintf(node->False, "L%d", label++);
-        if((l->addr==NULL)){
-            node->True=strdup(l->True);
-            sprintf(lcode, "%s", strdup(l->code));
-        } 
-        
-        if((r->True!=NULL)){
-            node->False=strdup(r->False); 
-            sprintf(rcode, "%s", strdup(r->code));
-        }
-        
-        if (l->addr!=NULL) {
-            l->True = malloc(10);
-            l->False = malloc(10);
-            sprintf(l->False,"%s", node->False); 
-            sprintf(l->True, "L%d", label++);
-            sprintf(lcode, "%sif %s : goto %s\n%s: ", l->code, l->addr, l->True, l->True);
-        }
-
-        if((r->True==NULL)) {
-            r->True = malloc(10);
-            r->False = malloc(10);
-            r->True=strdup(node->True); 
-            r->False = strdup(node->False);
-            sprintf(rcode, "%sif %s : goto %s", r->code, r->addr, r->True);
-        }
-
-        node->l = l;
-        node->r = r;
-
-    } else if (strcmp(op, "not") == 0) {
-        node->True = l->False;
-        node->False = l->True;
-        sprintf(code, "%sif not %s: goto %s", l->code, l->addr, node->True);
-    }
-    
-    sprintf(code, "%s%s", lcode, rcode);
-    node->code = code;
-    node->value.op = strdup(op);
-    printf("\n%s", node->code);
-    return node;
 }
 
 SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r){
-    //$1.next = newlabel();$2.next= $$.next;$$.code = $1.code || label($1.next) || $2.code ;
     SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
     if(!node) {
         fprintf(stderr, "Out of space\n");
@@ -235,12 +178,77 @@ SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r){
     node->nodetype = IF_NODE;
     l->next = malloc(10);
     node->next = malloc(10);
-    sprintf(l->next, "L%d", label++);
-    printf("%s",op);
-    strcpy(node->next, r->next);
-    sprintf(node->code, "%s%s%s", l->code, l->next, r->code);
-    printf("\n%s",node->code);
+    node->True = malloc(10);
+    node->False = malloc(10);
+    char code[40000];
+    sprintf(l->next, "%s", l->True);
+    sprintf(node->True, "%s", l->True);
+    sprintf(node->False, "%s", l->False);
+    sprintf(node->next, "L%d", label++);
+    sprintf(code, "%s%s", l->code, r->code);
+    node->code = strdup(code);
     return node;
+}
+
+SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r){
+    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    char code[40000];
+    node->next = malloc(10);
+    r->next = malloc(10);
+    sprintf(node->next, "%s", l->next);
+    sprintf(r->next, "%s", l->next);
+    node->nodetype = IF_NODE;
+    sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next, l->False, strdup(r->code));
+    node->code = strdup(code);
+    return node;
+}
+
+SyntaxTree* newBoolJoinNode(char *op, SyntaxTree* l, SyntaxTree* r){
+    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    node->nodetype = LOG_NODE;
+    node->l = l;
+    node->r = r;
+    node->value.op = op;
+    return node;
+}
+
+SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node){
+    if ((node!=NULL) && (node->nodetype==LOG_NODE)){
+        if (strcmp("root", type)==0){
+            node->True = malloc(10);
+            node->False = malloc(10);
+            sprintf(node->True, "L%d", label++);
+            sprintf(node->False, "L%d", label++);
+        }
+        if (node->l!=NULL){
+            if (strcmp(node->value.op, "and")==0){
+                node->l->True = malloc(10);
+                sprintf(node->l->True, "L%d", label++);
+                node->l->False = node->False;
+            } else if (strcmp(node->value.op, "or")==0){
+                node->l->False = malloc(10);
+                sprintf(node->l->False, "L%d", label++);
+                node->l->True = node->True;
+            } else if (strcmp(node->value.op, "not") == 0) {
+                node->True = node->l->False;
+                node->False = node->l->True;
+            }
+            newBoolLabelNode("leaf", node->l);
+        }
+        if (node->r!=NULL){
+            node->r->True = node->True;
+            node->r->False = node->False;
+            newBoolLabelNode("leaf", node->r);
+        }
+    }
 }
 
 void printSyntaxTree(SyntaxTree *head) {
@@ -249,22 +257,26 @@ void printSyntaxTree(SyntaxTree *head) {
 
         switch (head->nodetype) {
             case ID_NODE:
-                printf("Identifier : %s ", head->value.id);
+                printf("\nIdentifier : %s ", head->value.id);
                 break;
             case INT_NODE:
-                printf("Integer : %d ", head->value.intval);
+                printf("\nInteger : %d ", head->value.intval);
                 break;
             case DOUBLE_NODE:
-                printf("Double : %f ", head->value.doubleval);
+                printf("\nDouble : %f ", head->value.doubleval);
                 break;
             case AR_NODE:
-                printf("Arithmetic Operator : %s ",head->value.op);
+                printf("\nArithmetic Operator : %s ",head->value.op);
                 break;
             case ASS_NODE:
-                printf("Assignment Operator %s ",head->value.op);
+                printf("\nAssignment Operator %s ",head->value.op);
+                break;
+            case LOG_NODE:
+                printf("\nLogical Operator %s ",head->value.op);
+                printf("\n %s - %s",head->True, head->False);
                 break;
             default:
-                printf("Unknown node type: %c ", head->nodetype);
+                printf("\nUnknown node type: %c ", head->nodetype);
                 break;
         }
 

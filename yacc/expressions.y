@@ -22,37 +22,46 @@ int i=0;
     char *delim;
 }
 
-%type <Sy> E S B if_statement
+%type <Sy> E S B if_statement else_elif
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> relop arith assign AND OR NOT membership identity bitwise
 %token <key> IF ELSE ELIF WHILE FOR TRUE FALSE
 %token <delim> DELIMITER COLON TAB NL SPACE
 
+%right assign
+%right IF
+%left OR
+%left AND
+%right NOT
+%left relop membership identity
+%left bitwise
+%left arith
 %left '+' '-'
 %left '*' '/' '%'
 %left UMINUS
 
 %%
 
-S : if_statement { $$ = $1;}
+S : if_statement else_elif{ $$ = newElseNode($1, $2);
+                            printNode($$);}
   | /* empty */
   ;
 
-if_statement : IF B COLON NL SPACE S  { $$ = newIfNode($1, $2, $6);
-                                     //$2.true = newlabel();$2.false = $4.next = $$.next; $$.code = $2.code || label($2.true) || $4.code;
-                                     }
+if_statement : IF B COLON NL SPACE S NL {  newBoolLabelNode("root", $2);
+                                          newBoolExp($2);
+                                          $$ = newIfNode($1, $2, $6);
+                                      }
                                      ;
-else_elif: ELSE S    {
+else_elif: ELSE COLON NL SPACE S    { $$ = $5;
                                      //$2.true = newlabel();$2.false = newlabel();  $4.next  = $6.next =$$.next; $$.code = $2.code || label($2.true) || $4.code || gen('goto' $$.next) || label($2.false) || $6.code;
                                      }
         | ELIF S  {}
-        | /* */
         ;
 
-B : B OR B    { $$ = newBoolExp($2, $1, $3);}
-  | B AND B   { $$ = newBoolExp($2, $1, $3);}
-  | NOT B     { SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); $$ = newBoolExp($1, $2, s);}
+B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
+  | B AND B   { $$ = newBoolJoinNode($2, $1, $3);}
+  | NOT B     { SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); }
   | E         { $$ = $1; }
   | TRUE      {/*$$.code = gen('goto' $$.true) ;*/}
   | FALSE     {/*$$.code = gen('goto' $$.false) ;*/}

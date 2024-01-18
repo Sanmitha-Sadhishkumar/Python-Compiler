@@ -34,4 +34,8 @@ void printNode(SyntaxTree* a);
 
 SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r);
 
-SyntaxTree* newBoolExp(char *op, SyntaxTree *l, SyntaxTree *r);
+SyntaxTree* newBoolExp(SyntaxTree *node);
+
+SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r);
+
+SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node);
