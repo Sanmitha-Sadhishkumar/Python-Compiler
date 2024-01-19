@@ -40,4 +40,8 @@ SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r);
 
 SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node);
 
-SyntaxTree* newJoinNode(SyntaxTree*l, SyntaxTree*r);
+SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r);
+
+SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r);
+
+SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);

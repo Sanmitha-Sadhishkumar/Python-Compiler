@@ -22,13 +22,14 @@ int i=0;
     char *delim;
 }
 
-%type <Sy> E S B if_statement else_elif elif_statement else_statement
+%type <Sy> E S B if_statement else_elif elif_statement else_statement while_statement indent_statement
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> relop arith assign AND OR NOT membership identity bitwise
 %token <key> IF ELSE ELIF WHILE FOR TRUE FALSE
 %token <delim> DELIMITER COLON TAB NL SPACE
 
+%left ELSE ELIF WHILE FOR TRUE FALSE
 %right assign
 %right IF
 %left OR
@@ -46,33 +47,28 @@ int i=0;
 S : if_statement else_elif{ $$ = newElseNode($1, $2);
                             saveTriple();
                             saveQuadruple();
-                            printNode($$);
-                            gen3addr($$);}
+                            gen3addr($$); printNode($$); }
+  | while_statement else_statement {$$ = $2;}
   | /* empty */
   ;
 
-if_statement : IF B COLON NL SPACE S NL {  newBoolLabelNode("root", $2);
-                                          newBoolExp($2);
-                                          $$ = newIfNode($1, $2, $6);
-                                      }
-                                     ;
-else_elif: elif_statement else_statement {$$ = newJoinNode($1, $2);}
-                                            ;
+if_statement : IF B COLON indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $4);} ;
 
-else_statement: ELSE COLON NL SPACE S NL   { $$ = $5;
-                                     //$2.true = newlabel();$2.false = newlabel();  $4.next  = $6.next =$$.next; $$.code = $2.code || label($2.true) || $4.code || gen('goto' $$.next) || label($2.false) || $6.code;
-                                     }
-              | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
-                              s->nodetype = -1;
-                              s->code = "";
-                              $$ = s;}
-        ;
-elif_statement: ELIF B COLON NL SPACE S NL  {newBoolLabelNode("root", $2);
-                                            newBoolExp($2);
-                                            $$ = newIfNode($1, $2, $6);}
-              | elif_statement elif_statement {$$ = newJoinNode($1, $2);}
-              | /* empty */
-        ;
+else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2); }
+         | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
+
+else_statement: NL ELSE COLON indent_statement   { $$ = $4; }
+              | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
+
+elif_statement: NL ELIF B COLON indent_statement  {newBoolLabelNode("root", $3); newBoolExp($3); $$ = newIfNode($2, $3, $5);}
+              | elif_statement elif_statement {$$ = newElifJoinNode($1, $2);}
+              | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
+
+while_statement : WHILE B COLON indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $4); };
+
+indent_statement : NL SPACE S { $$ = $3;}
+                 | indent_statement indent_statement {$$ = newStJoinNode($1, $2);}
+                 | /* empty */ { printf("op"); SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
   | B AND B   { $$ = newBoolJoinNode($2, $1, $3);}
@@ -91,25 +87,11 @@ S : id assign E { SyntaxTree* id=newIDNode($1);
                   }
   ;
 
-E : E arith E { $$ = newOpNode($2, $1, $3);
-                addTriple($2, $1, $3);
-                addQuadruple($2,$1,$3,$$);
-                }
-
-  | E "-" E { $$ = newOpNode("-", $1, $3);
-                addTriple("-", $1, $3);
-                addQuadruple("-",$1,$3,$$);
-                }
-
-  | E relop E { $$ = newOpNode($2, $1, $3);
-                addTriple($2, $1, $3);
-                addQuadruple($2,$1,$3,$$);
-                }
-                
+E : E arith E { $$ = newOpNode($2, $1, $3); addTriple($2, $1, $3); addQuadruple($2,$1,$3,$$); }
+  | E "-" E { $$ = newOpNode("-", $1, $3); addTriple("-", $1, $3); addQuadruple("-",$1,$3,$$); }
+  | E relop E { $$ = newOpNode($2, $1, $3); addTriple($2, $1, $3); addQuadruple($2,$1,$3,$$); }
   | "(" E ")" { $$ = $2; }
-  | "-" E %prec UMINUS { $$ = newOpNode("-", 0, $2);
-                         addTriple("-", $2, 0);
-                         addQuadruple("-",$2,0,$$); }
+  | "-" E %prec UMINUS { $$ = newOpNode("-", 0, $2); addTriple("-", $2, 0); addQuadruple("-",$2,0,$$); }
   | id { $$ = newIDNode($1); }
   | INT { $$ = newIntNode($1);}
   | FLOAT { $$ = newDoubleNode($1);}

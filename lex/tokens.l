@@ -27,6 +27,8 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 
 "else"      {yylval.key = strdup(yytext); return ELSE;}
 
+"while"      {yylval.key = strdup(yytext); return WHILE;}
+
 "elif"      {yylval.key = strdup(yytext); return ELIF;}
 
 "True"      {yylval.key = strdup(yytext); return TRUE;}
