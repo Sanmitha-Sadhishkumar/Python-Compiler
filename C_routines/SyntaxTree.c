@@ -16,6 +16,7 @@
 #define UMINUS_NODE 'M'
 #define IF_NODE 'e'
 #define ELSE_NODE 'E'
+#define ELIF_NODE 'L'
 
 int quad=1;
 int label =1;
@@ -139,7 +140,7 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
             if((node->l->nodetype==LOG_NODE)){
                 sprintf(lcode, "%s\n%s : ", strdup(node->l->code), node->l->False);
             } else {
-                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s: ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->True);
+                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s: ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->False);
             }
             if((node->r->nodetype==LOG_NODE)){
                 sprintf(rcode, "%s\n%s : ", strdup(node->r->code), node->r->True);
@@ -203,6 +204,23 @@ SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r){
     sprintf(r->next, "%s", l->next);
     node->nodetype = IF_NODE;
     sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next, l->False, strdup(r->code));
+    node->code = strdup(code);
+    return node;
+}
+
+SyntaxTree* newJoinNode(SyntaxTree*l, SyntaxTree*r){
+    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    char code[40000];
+    node->next = malloc(10);
+    r->next = malloc(10);
+    node->nodetype = ELIF_NODE;
+    sprintf(node->next, "%s", l->next);
+    sprintf(r->next, "%s", l->next);
+    sprintf(code, "%s%s : %s\n", strdup(l->code),l->False,strdup(r->code));
     node->code = strdup(code);
     return node;
 }

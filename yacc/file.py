@@ -1,4 +1,6 @@
-if a>k and b<m or c>=m or d>3: 
+if a>k and b<m: 
     a=0
-else:
+elif c>=m or d>3:
     b=0
+else:
+    d=0

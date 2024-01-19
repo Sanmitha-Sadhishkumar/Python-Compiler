@@ -1,16 +1,18 @@
 t1=a>k
-if t1 : goto L5
-goto L4
-L5:  t2=b<m
+if t1 : goto L3
+goto L2
+L3:  t2=b<m
 if t2 : goto L1
- goto L4
-L4 :  t3=c>=m
-if t3 : goto L1
- goto L3
-L3 :  t4=d>3
-if t4 : goto L1
  goto L2
 L1 :a=0
-goto L6
-L2 : b=0
+goto L4
+L2 : t4=c>=m
+if t4 : goto L5
+goto L7
+L7:  t5=d>3
+if t5 : goto L5
+ goto L6
+L5 :b=0
+L6 : d=0
+
 

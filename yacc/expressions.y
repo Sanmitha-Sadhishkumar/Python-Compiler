@@ -22,7 +22,7 @@ int i=0;
     char *delim;
 }
 
-%type <Sy> E S B if_statement else_elif
+%type <Sy> E S B if_statement else_elif elif_statement else_statement
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> relop arith assign AND OR NOT membership identity bitwise
@@ -44,9 +44,9 @@ int i=0;
 %%
 
 S : if_statement else_elif{ $$ = newElseNode($1, $2);
-                            printNode($$);
                             saveTriple();
                             saveQuadruple();
+                            printNode($$);
                             gen3addr($$);}
   | /* empty */
   ;
@@ -56,10 +56,22 @@ if_statement : IF B COLON NL SPACE S NL {  newBoolLabelNode("root", $2);
                                           $$ = newIfNode($1, $2, $6);
                                       }
                                      ;
-else_elif: ELSE COLON NL SPACE S    { $$ = $5;
+else_elif: elif_statement else_statement {$$ = newJoinNode($1, $2);}
+                                            ;
+
+else_statement: ELSE COLON NL SPACE S NL   { $$ = $5;
                                      //$2.true = newlabel();$2.false = newlabel();  $4.next  = $6.next =$$.next; $$.code = $2.code || label($2.true) || $4.code || gen('goto' $$.next) || label($2.false) || $6.code;
                                      }
-        | ELIF S  {}
+              | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+                              s->nodetype = -1;
+                              s->code = "";
+                              $$ = s;}
+        ;
+elif_statement: ELIF B COLON NL SPACE S NL  {newBoolLabelNode("root", $2);
+                                            newBoolExp($2);
+                                            $$ = newIfNode($1, $2, $6);}
+              | elif_statement elif_statement {$$ = newJoinNode($1, $2);}
+              | /* empty */
         ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}

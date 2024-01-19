@@ -39,3 +39,5 @@ SyntaxTree* newBoolExp(SyntaxTree *node);
 SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r);
 
 SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node);
+
+SyntaxTree* newJoinNode(SyntaxTree*l, SyntaxTree*r);
