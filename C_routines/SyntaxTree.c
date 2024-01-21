@@ -200,10 +200,6 @@ SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r){
         fprintf(stderr, "Out of space\n");
         exit(1);
     }
-    if (l->nodetype==-1){
-        node->nodetype = -1;
-        return node;
-    }
     char code[400000];
     node->l = l;
     node->r = r;
@@ -223,7 +219,7 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r){
         fprintf(stderr, "Out of space\n");
         exit(1);
     }
-    if (l->nodetype==-1){
+    if ((l->nodetype==-1) && (r->nodetype==-1)){
         node->nodetype = -1;
         return node;
     }
@@ -235,11 +231,15 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r){
     node->nodetype = ELIF_NODE;
     node->True = malloc(10);
     node->False = malloc(10);
-    node->True = l->True;
+    if (l->nodetype!=-1){
+        node->True = l->True;
+        sprintf(node->next, "%s", l->next);
+        sprintf(r->next, "%s", l->next);
+        sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next ,l->False, strdup(r->code));
+    } else {
+        sprintf(code, "%s", strdup(r->code));
+    }
     node->False = r->False;
-    sprintf(node->next, "%s", l->next);
-    sprintf(r->next, "%s", l->next);
-    sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next ,l->False, strdup(r->code));
     node->code = strdup(code);
     return node;
 }
@@ -327,57 +327,63 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     return node;
 }
 
-void printSyntaxTreeHelper(SyntaxTree *node, int depth) {
+void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) {
     if (node != NULL) {
         int i;
         for (i= 0; i < depth; i++) {
-            printf("  "); 
+            fprintf(file, "  "); 
         }
 
         switch (node->nodetype) {
             case ID_NODE:
-                printf("|-- %s\n", node->value.id);
+                fprintf(file, "|-- %s\n", node->value.id);
                 break;
             case IF_NODE:
-                printf("|-- If\n");
+                fprintf(file, "|-- If\n");
                 break;
             case ELIF_NODE:
-                printf("|-- elif\n");
+                fprintf(file, "|-- elif\n");
                 break;
             case WHILE_NODE:
-                printf("|-- while\n");
+                fprintf(file, "|-- while\n");
                 break;
             case INT_NODE:
-                printf("|-- %s\n", node->value.intval);
+                fprintf(file, "|-- %s\n", node->value.intval);
                 break;
             case DOUBLE_NODE:
-                printf("|-- %s\n", node->value.doubleval);
+                fprintf(file, "|-- %s\n", node->value.doubleval);
                 break;
             case AR_NODE:
-                printf("|--  %s\n", node->value.op);
+                fprintf(file, "|--  %s\n", node->value.op);
                 break;
             case REL_NODE:
-                printf("|--  %s\n", node->value.op);
+                fprintf(file, "|--  %s\n", node->value.op);
                 break;
             case ASS_NODE:
-                printf("|-- %s\n", node->value.op);
+                fprintf(file, "|-- %s\n", node->value.op);
                 break;
             case LOG_NODE:
-                printf("|-- %s\n", node->value.op);
+                fprintf(file, "|-- %s\n", node->value.op);
                 for (i = 0; i <= depth; i++) {
-                    printf("  ");
+                    fprintf(file, "  ");
                 }
-                printf("|- %s - %s\n", node->True, node->False);
+                fprintf(file, "|-- %s - %s\n", node->True, node->False);
                 break;
         }
 
-        printSyntaxTreeHelper(node->l, depth + 1);
-        printSyntaxTreeHelper(node->r, depth + 1);
+        printSyntaxTreeHelper(file, node->l, depth + 2);
+        printSyntaxTreeHelper(file, node->r, depth + 2);
     }
 }
 
 void printSyntaxTree(SyntaxTree *head) {
-    printSyntaxTreeHelper(head, 0);
+    FILE *file = fopen("../Data Structures/SyntaxTree.txt", "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening file %s for writing");
+        return;
+    }
+    printSyntaxTreeHelper(file, head, 0);
+    fclose(file);
 }
 
 void printNode(SyntaxTree* a){

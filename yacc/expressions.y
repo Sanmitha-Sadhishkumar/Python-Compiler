@@ -48,16 +48,15 @@ S : if_statement else_elif{  $$ = newElseNode($1, $2);
                             saveTriple();
                             saveQuadruple();
                             gen3addr($$); printNode($$); printSyntaxTree($$); }
-  | while_statement else_statement {$$ = $2;}
+  | while_statement else_statement {$$ = $1; printNode($$);}
   | /* empty */
   ;
 
 if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
 
-else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2);}
-         | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
+else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2);} ;
 
-else_statement: ELSE COLON NL indent_statement   { $$ = $4; }
+else_statement: ELSE COLON NL indent_statement   { $$ = $4; printNode($$); }
               | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 elif_statement: ELIF B COLON NL indent_statement  {newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5);}

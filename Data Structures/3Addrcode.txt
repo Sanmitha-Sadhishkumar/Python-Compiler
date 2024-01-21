@@ -7,4 +7,14 @@ if t2 : goto L1
 L1 :b=0
 a=0
 goto L4
-L2 : (null)
+L2 : t5=a>k
+if t5 : goto L7
+goto L6
+L7:  t6=k<m
+if t6 : goto L5
+ goto L6
+L5 :d=0
+goto L8
+L6 : c=0
+
+

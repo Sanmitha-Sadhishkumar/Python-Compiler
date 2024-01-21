@@ -30,7 +30,7 @@ SyntaxTree * newIDNode(char* id);
 
 void printSyntaxTree(SyntaxTree * head);
 
-void printSyntaxTreeHelper(SyntaxTree *node, int depth) ;
+void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) ;
 
 void printNode(SyntaxTree* a);
 
