@@ -44,30 +44,30 @@ int i=0;
 
 %%
 
-S : if_statement else_elif{ $$ = newElseNode($1, $2);
+S : if_statement else_elif{  $$ = newElseNode($1, $2);
                             saveTriple();
                             saveQuadruple();
-                            gen3addr($$); printNode($$); }
+                            gen3addr($$); printNode($$); printSyntaxTree($$); }
   | while_statement else_statement {$$ = $2;}
   | /* empty */
   ;
 
-if_statement : IF B COLON indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $4);} ;
+if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
 
-else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2); }
+else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2);}
          | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-else_statement: NL ELSE COLON indent_statement   { $$ = $4; }
+else_statement: ELSE COLON NL indent_statement   { $$ = $4; }
               | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-elif_statement: NL ELIF B COLON indent_statement  {newBoolLabelNode("root", $3); newBoolExp($3); $$ = newIfNode($2, $3, $5);}
+elif_statement: ELIF B COLON NL indent_statement  {newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5);}
               | elif_statement elif_statement {$$ = newElifJoinNode($1, $2);}
               | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-while_statement : WHILE B COLON indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $4); };
+while_statement : WHILE B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $5); };
 
-indent_statement : NL SPACE S { $$ = $3;}
-                 | indent_statement indent_statement {$$ = newStJoinNode($1, $2);}
+indent_statement : SPACE S NL { $$ = $2;}
+                 | indent_statement indent_statement {$$ = newStJoinNode($1, $2); }
                  | /* empty */ { printf("op"); SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}

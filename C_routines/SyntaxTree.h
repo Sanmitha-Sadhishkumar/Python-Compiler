@@ -30,6 +30,8 @@ SyntaxTree * newIDNode(char* id);
 
 void printSyntaxTree(SyntaxTree * head);
 
+void printSyntaxTreeHelper(SyntaxTree *node, int depth) ;
+
 void printNode(SyntaxTree* a);
 
 SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r);

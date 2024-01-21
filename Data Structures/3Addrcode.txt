@@ -1,15 +1,10 @@
 t1=a>k
 if t1 : goto L3
 goto L2
-L3:  t2=b<m
+L3:  t2=k<m
 if t2 : goto L1
  goto L2
 L1 :b=0
 a=0
 goto L4
-L2 : t1=a>k
-if t1 : goto L3
-goto L2
-L3:  t2=b<m
-if t2 : goto L1
- goto L2
+L2 : (null)
