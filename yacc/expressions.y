@@ -22,14 +22,14 @@ int i=0;
     char *delim;
 }
 
-%type <Sy> E S B if_statement else_elif elif_statement else_statement while_statement indent_statement
+%type <Sy> E S B P if_statement else_elif elif_statement else_statement while_statement indent_statement
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> relop arith assign AND OR NOT membership identity bitwise
 %token <key> IF ELSE ELIF WHILE FOR TRUE FALSE
 %token <delim> DELIMITER COLON TAB NL SPACE
 
-%left ELSE ELIF WHILE FOR TRUE FALSE
+%left ELSE ELIF WHILE FOR TRUE FALSE SPACE
 %right assign
 %right IF
 %left OR
@@ -44,12 +44,17 @@ int i=0;
 
 %%
 
-S : if_statement else_elif{  $$ = newElseNode($1, $2);
-                            saveTriple();
-                            saveQuadruple();
-                            gen3addr($$); printNode($$); printSyntaxTree($$); }
-  | while_statement else_statement {$$ = $1; printNode($$);}
-  | /* empty */
+P : S {$$ = $1; saveTriple(); saveQuadruple(); gen3addr($$);  printSyntaxTree($$); printNode($$);};
+
+S : if_statement else_elif{ $$ = newElseNode($1, $2);}
+  | while_statement else_statement {$$ = $1;}
+  | id assign E  { SyntaxTree* id=newIDNode($1);
+                  $$ = newOpNode($2, id , $3);
+                  SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1;
+                  addTriple($2, $3, s); addQuadruple($2, $3, s, id);
+                  }
+  | S NL S { $$ = newStJoinNode($1, $3);}
+  | /* empty */ {}
   ;
 
 if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
@@ -65,9 +70,9 @@ elif_statement: ELIF B COLON NL indent_statement  {newBoolLabelNode("root", $2);
 
 while_statement : WHILE B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $5); };
 
-indent_statement : SPACE S NL { $$ = $2;}
-                 | indent_statement indent_statement {$$ = newStJoinNode($1, $2); }
-                 | /* empty */ { printf("op"); SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
+indent_statement : SPACE S { $$ = $2;}
+                 | indent_statement NL indent_statement {$$ = newStJoinNode($1, $3); }
+                 | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
   | B AND B   { $$ = newBoolJoinNode($2, $1, $3);}
@@ -75,15 +80,6 @@ B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
   | E         { $$ = $1; }
   | TRUE      {/*$$.code = gen('goto' $$.true) ;*/}
   | FALSE     {/*$$.code = gen('goto' $$.false) ;*/}
-  ;
-
-S : id assign E { SyntaxTree* id=newIDNode($1);
-                  $$ = newOpNode($2, id , $3);
-                  SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree));
-                  s->nodetype = -1;
-                  addTriple($2, $3, s);
-                  addQuadruple($2, $3, s, id);
-                  }
   ;
 
 E : E arith E { $$ = newOpNode($2, $1, $3); addTriple($2, $1, $3); addQuadruple($2,$1,$3,$$); }

@@ -1,20 +1,10 @@
-t1=a>k
-if t1 : goto L3
-goto L2
-L3:  t2=k<m
-if t2 : goto L1
- goto L2
-L1 :b=0
 a=0
+if a : goto L3
+goto L2
+L3:  if b : goto L1
+ goto L2
+L1 :e=0
 goto L4
-L2 : t5=a>k
-if t5 : goto L7
-goto L6
-L7:  t6=k<m
-if t6 : goto L5
- goto L6
-L5 :d=0
-goto L8
-L6 : c=0
-
+L2 : c=0
+aa=0
 

@@ -47,3 +47,20 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r);
 SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r);
 
 SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
+
+
+#define ID_NODE 'I'
+#define INT_NODE 'D'
+#define DOUBLE_NODE 'F'
+#define ASS_NODE '='
+#define AR_NODE '+'
+#define REL_NODE '>'
+#define LOG_NODE 'a'
+#define MEM_NODE 'i'
+#define IDENTITY_NODE 's'
+#define BIT_NODE '&'
+#define UMINUS_NODE 'M'
+#define IF_NODE 'e'
+#define ELSE_NODE 'E'
+#define ELIF_NODE 'L'
+#define WHILE_NODE 'W'

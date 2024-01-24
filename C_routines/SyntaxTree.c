@@ -3,24 +3,62 @@
 #include<stdlib.h>
 #include "SyntaxTree.h"
 
-#define ID_NODE 'I'
-#define INT_NODE 'D'
-#define DOUBLE_NODE 'F'
-#define ASS_NODE '='
-#define AR_NODE '+'
-#define REL_NODE '>'
-#define LOG_NODE 'a'
-#define MEM_NODE 'i'
-#define IDENTITY_NODE 's'
-#define BIT_NODE '&'
-#define UMINUS_NODE 'M'
-#define IF_NODE 'e'
-#define ELSE_NODE 'E'
-#define ELIF_NODE 'L'
-#define WHILE_NODE 'W'
-
 int quad=1;
 int label =1;
+
+/*literals*/
+
+SyntaxTree * newDoubleNode(char* value){
+    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    node->nodetype = DOUBLE_NODE;
+    node->value.doubleval = value;
+    node->addr = malloc(20);
+    sprintf(node->addr, "%s", value);
+    node->code = malloc(1);
+    node->code[0] = '\0'; 
+    node->l = node->r = NULL;
+    node->True= node->False= NULL;
+    node->code="";
+    return node;
+}
+
+SyntaxTree * newIntNode(char* value){
+    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    node->nodetype = INT_NODE;
+    node->value.intval = value;
+    node->addr = malloc(20);
+    sprintf(node->addr, "%s", value);
+    node->code = malloc(1);
+    node->code[0] = '\0'; 
+    node->l = node->r = NULL;
+    node->True= node->False= NULL;
+    node->code="";
+    return node;
+}
+
+SyntaxTree * newIDNode(char* id){
+    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    node->nodetype = ID_NODE;
+    node->value.id = node->addr=strdup(id);
+    node->l = node->r = NULL;
+    node->True= node->False= NULL;
+    node->code="";
+    return node;
+}
+
+/*Operators */
 
 SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
     SyntaxTree *node = malloc(sizeof(SyntaxTree));
@@ -73,63 +111,54 @@ SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
     node->False = malloc(10);
     node->True= node->False= NULL;
     quad++;
-    //printf("\nadded new op node: %s with with addr %s\n",op, node->addr);
     return node;
 }
 
-SyntaxTree * newDoubleNode(char* value){
-    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+/*Boolean Expression*/
+
+SyntaxTree* newBoolJoinNode(char *op, SyntaxTree* l, SyntaxTree* r){
+    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
     if(!node) {
         fprintf(stderr, "Out of space\n");
         exit(1);
     }
-    node->nodetype = DOUBLE_NODE;
-    node->value.doubleval = value;
-    node->addr = malloc(20);
-    sprintf(node->addr, "%s", value);
-    node->code = malloc(1);
-    node->code[0] = '\0'; 
-    node->l = node->r = NULL;
-    node->True= node->False= NULL;
-    node->code="";
-    //printf("added new double node : %s with addr %s and code %s\n",value, node->addr, node->code);
+    node->nodetype = LOG_NODE;
+    node->l = l;
+    node->r = r;
+    node->value.op = op;
     return node;
 }
 
-SyntaxTree * newIntNode(char* value){
-    SyntaxTree *node = malloc(sizeof(SyntaxTree));
-    if(!node) {
-        fprintf(stderr, "Out of space\n");
-        exit(1);
+SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node){
+    if ((node!=NULL) && (node->nodetype==LOG_NODE)){
+        if (strcmp("root", type)==0){
+            node->True = malloc(10);
+            node->False = malloc(10);
+            sprintf(node->True, "L%d", label++);
+            sprintf(node->False, "L%d", label++);
+        }
+        if (node->l!=NULL){
+            if (strcmp(node->value.op, "and")==0){
+                node->l->True = malloc(10);
+                sprintf(node->l->True, "L%d", label++);
+                node->l->False = node->False;
+            } else if (strcmp(node->value.op, "or")==0){
+                node->l->False = malloc(10);
+                sprintf(node->l->False, "L%d", label++);
+                node->l->True = node->True;
+            } else if (strcmp(node->value.op, "not") == 0) {
+                node->True = node->l->False;
+                node->False = node->l->True;
+            }
+            newBoolLabelNode("leaf", node->l);
+        }
+        if (node->r!=NULL){
+            node->r->True = node->True;
+            node->r->False = node->False;
+            newBoolLabelNode("leaf", node->r);
+        }
     }
-    node->nodetype = INT_NODE;
-    node->value.intval = value;
-    node->addr = malloc(20);
-    sprintf(node->addr, "%s", value);
-    node->code = malloc(1);
-    node->code[0] = '\0'; 
-    node->l = node->r = NULL;
-    node->True= node->False= NULL;
-    node->code="";
-    //printf("added new int node : %s with addr %s and code %s\n",value, node->addr, node->code);
-    return node;
 }
-
-SyntaxTree * newIDNode(char* id){
-    SyntaxTree *node = malloc(sizeof(SyntaxTree));
-    if(!node) {
-        fprintf(stderr, "Out of space\n");
-        exit(1);
-    }
-    node->nodetype = ID_NODE;
-    node->value.id = node->addr=strdup(id);
-    node->l = node->r = NULL;
-    node->True= node->False= NULL;
-    node->code="";
-    //printf("added new id node : %s with addr %s and code %s\n",id, node->addr, node->code);
-    return node;
-}
-
 
 SyntaxTree* newBoolExp(SyntaxTree *node){
     if ((node!=NULL) && (node->nodetype==LOG_NODE)){
@@ -166,10 +195,11 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
         sprintf(code, "%s %s", strdup(lcode),  strdup(rcode));
         node->code = strdup(code);
         node->addr = NULL;
-    //printf("\n\n%s : %s", op, node->code);
         return node;
     }
 }
+
+/*If-else-elif*/
 
 SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r){
     SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
@@ -244,63 +274,7 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r){
     return node;
 }
 
-SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r){
-    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
-    if(!node) {
-        fprintf(stderr, "Out of space\n");
-        exit(1);
-    }
-    char code[400000];
-    node->l = l;
-    node->r = r;
-    sprintf(code, "%s%s", strdup(l->code), strdup(r->code));
-    node->code = strdup(code);
-    return node;
-}
-
-SyntaxTree* newBoolJoinNode(char *op, SyntaxTree* l, SyntaxTree* r){
-    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
-    if(!node) {
-        fprintf(stderr, "Out of space\n");
-        exit(1);
-    }
-    node->nodetype = LOG_NODE;
-    node->l = l;
-    node->r = r;
-    node->value.op = op;
-    return node;
-}
-
-SyntaxTree* newBoolLabelNode(char* type, SyntaxTree* node){
-    if ((node!=NULL) && (node->nodetype==LOG_NODE)){
-        if (strcmp("root", type)==0){
-            node->True = malloc(10);
-            node->False = malloc(10);
-            sprintf(node->True, "L%d", label++);
-            sprintf(node->False, "L%d", label++);
-        }
-        if (node->l!=NULL){
-            if (strcmp(node->value.op, "and")==0){
-                node->l->True = malloc(10);
-                sprintf(node->l->True, "L%d", label++);
-                node->l->False = node->False;
-            } else if (strcmp(node->value.op, "or")==0){
-                node->l->False = malloc(10);
-                sprintf(node->l->False, "L%d", label++);
-                node->l->True = node->True;
-            } else if (strcmp(node->value.op, "not") == 0) {
-                node->True = node->l->False;
-                node->False = node->l->True;
-            }
-            newBoolLabelNode("leaf", node->l);
-        }
-        if (node->r!=NULL){
-            node->r->True = node->True;
-            node->r->False = node->False;
-            newBoolLabelNode("leaf", node->r);
-        }
-    }
-}
+/*While*/
 
 SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
@@ -326,6 +300,24 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     node->code = strdup(code);
     return node;
 }
+
+/*Statement*/
+
+SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r){
+    SyntaxTree *node = (SyntaxTree*)malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    char code[400000];
+    node->l = l;
+    node->r = r;
+    sprintf(code, "%s%s", strdup(l->code), strdup(r->code));
+    node->code = strdup(code);
+    return node;
+}
+
+/*Printing*/
 
 void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) {
     if (node != NULL) {
