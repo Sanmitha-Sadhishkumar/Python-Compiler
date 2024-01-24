@@ -234,11 +234,12 @@ SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r){
     node->l = l;
     node->r = r;
     node->next = malloc(10);
-    r->next = malloc(10);
-    sprintf(node->next, "%s", l->next);
-    sprintf(r->next, "%s", l->next);
+    if (r->nodetype==ELIF_NODE)
+        sprintf(node->next, "%s", r->next);
+    else
+        sprintf(node->next, "%s", l->next);
     node->nodetype = IF_NODE;
-    sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next, l->False, strdup(r->code));
+    sprintf(code, "%sgoto %s\n%s : %s%s : ", strdup(l->code), node->next, l->False, strdup(r->code), node->next);
     node->code = strdup(code);
     return node;
 }
@@ -265,7 +266,7 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r){
         node->True = l->True;
         sprintf(node->next, "%s", l->next);
         sprintf(r->next, "%s", l->next);
-        sprintf(code, "%sgoto %s\n%s : %s\n", strdup(l->code), l->next ,l->False, strdup(r->code));
+        sprintf(code, "%sgoto %s\n%s : %s", strdup(l->code), l->next ,l->False, strdup(r->code));
     } else {
         sprintf(code, "%s", strdup(r->code));
     }
@@ -296,7 +297,7 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     sprintf(node->False, "%s", l->False);
     sprintf(node->next, "L%d", label++);
     sprintf(r->next, "L%d", label++);
-    sprintf(code, "%s : %s\n%s :%sgoto %s", r->next, strdup(l->code), l->True, strdup(r->code), r->next);
+    sprintf(code, "%s : %s\n%s :%sgoto %s\n%s : ", r->next, strdup(l->code), l->True, strdup(r->code), r->next, l->False);
     node->code = strdup(code);
     return node;
 }
@@ -309,6 +310,7 @@ SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r){
         fprintf(stderr, "Out of space\n");
         exit(1);
     }
+    node->nodetype = ST_NODE;
     char code[400000];
     node->l = l;
     node->r = r;
@@ -382,6 +384,7 @@ void printNode(SyntaxTree* a){
     printf("\nNodetype : %d",a->nodetype);
     //printf("\nAddr : %s",a->addr);
     printf("\ncode : %s",a->code);
+    //printf("\nnext : %s",a->next);
     printf("\ntrue : %s",a->True);
     printf("\nfalse : %s\n\n",a->False);
 }

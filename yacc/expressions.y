@@ -22,14 +22,14 @@ int i=0;
     char *delim;
 }
 
-%type <Sy> E S B P if_statement else_elif elif_statement else_statement while_statement indent_statement
+%type <Sy> E S B P G if_statement else_elif elif_statement else_statement while_statement indent_statement
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> relop arith assign AND OR NOT membership identity bitwise
 %token <key> IF ELSE ELIF WHILE FOR TRUE FALSE
 %token <delim> DELIMITER COLON TAB NL SPACE
 
-%left ELSE ELIF WHILE FOR TRUE FALSE SPACE
+%left ELSE ELIF WHILE FOR TRUE FALSE
 %right assign
 %right IF
 %left OR
@@ -43,35 +43,36 @@ int i=0;
 %left UMINUS
 
 %%
+G : P { $$ = $1; printNode($$);saveTriple(); saveQuadruple(); gen3addr($$);  printSyntaxTree($$);};
 
-P : S {$$ = $1; saveTriple(); saveQuadruple(); gen3addr($$);  printSyntaxTree($$); printNode($$);};
+P : S {$$ = $1; }
+  | S NL P {$$ = newStJoinNode($1, $3);}
+  | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 S : if_statement else_elif{ $$ = newElseNode($1, $2);}
-  | while_statement else_statement {$$ = $1;}
+  | while_statement else_statement {$$ = newStJoinNode($1, $2);}
   | id assign E  { SyntaxTree* id=newIDNode($1);
                   $$ = newOpNode($2, id , $3);
                   SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1;
                   addTriple($2, $3, s); addQuadruple($2, $3, s, id);
                   }
-  | S NL S { $$ = newStJoinNode($1, $3);}
-  | /* empty */ {}
   ;
 
 if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
 
 else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2);} ;
 
-else_statement: ELSE COLON NL indent_statement   { $$ = $4; printNode($$); }
+else_statement: ELSE COLON NL indent_statement   { $$ = $4; }
               | /* empty */  {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 elif_statement: ELIF B COLON NL indent_statement  {newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5);}
               | elif_statement elif_statement {$$ = newElifJoinNode($1, $2);}
               | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-while_statement : WHILE B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $5); };
+while_statement : WHILE B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $5);};
 
 indent_statement : SPACE S { $$ = $2;}
-                 | indent_statement NL indent_statement {$$ = newStJoinNode($1, $3); }
+                 | indent_statement NL indent_statement {$$ = newStJoinNode($1, $3);}
                  | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}

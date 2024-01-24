@@ -1,10 +1,7 @@
-a=0
-if a : goto L3
-goto L2
-L3:  if b : goto L1
+L5 : if c : goto L1
+goto L3
+L3:  if d : goto L1
  goto L2
-L1 :e=0
-goto L4
+L1 :kk=0
+goto L5
 L2 : c=0
-aa=0
-

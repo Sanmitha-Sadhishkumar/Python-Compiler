@@ -61,6 +61,7 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
 #define BIT_NODE '&'
 #define UMINUS_NODE 'M'
 #define IF_NODE 'e'
+#define ST_NODE 'S'
 #define ELSE_NODE 'E'
 #define ELIF_NODE 'L'
 #define WHILE_NODE 'W'
