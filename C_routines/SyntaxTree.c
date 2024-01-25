@@ -234,12 +234,15 @@ SyntaxTree* newElseNode(SyntaxTree*l, SyntaxTree*r){
     node->l = l;
     node->r = r;
     node->next = malloc(10);
-    if (r->nodetype==ELIF_NODE)
+    if ((r->nodetype==ELIF_NODE) && (r->next!=NULL))
         sprintf(node->next, "%s", r->next);
     else
         sprintf(node->next, "%s", l->next);
     node->nodetype = IF_NODE;
-    sprintf(code, "%sgoto %s\n%s : %s%s : ", strdup(l->code), node->next, l->False, strdup(r->code), node->next);
+    if (r->code==NULL)
+        sprintf(code, "%s%s : ", strdup(l->code), l->False);
+    else
+        sprintf(code, "%sgoto %s\n%s : %s%s : ", strdup(l->code), node->next, l->False, strdup(r->code), node->next);
     node->code = strdup(code);
     return node;
 }
@@ -269,6 +272,7 @@ SyntaxTree* newElifJoinNode(SyntaxTree*l, SyntaxTree*r){
         sprintf(code, "%sgoto %s\n%s : %s", strdup(l->code), l->next ,l->False, strdup(r->code));
     } else {
         sprintf(code, "%s", strdup(r->code));
+        node->next = NULL;
     }
     node->False = r->False;
     node->code = strdup(code);

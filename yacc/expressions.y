@@ -43,20 +43,20 @@ int i=0;
 %left UMINUS
 
 %%
-G : P { $$ = $1; printNode($$);saveTriple(); saveQuadruple(); gen3addr($$);  printSyntaxTree($$);};
+G : P { $$ = $1; printNode($$); gen3addr($$);  printSyntaxTree($$);};
 
 P : S {$$ = $1; }
   | S NL P {$$ = newStJoinNode($1, $3);}
   | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-S : if_statement else_elif{ $$ = newElseNode($1, $2);}
+S : if_statement else_elif { $$ = newElseNode($1, $2);}
   | while_statement else_statement {$$ = newStJoinNode($1, $2);}
   | id assign E  { SyntaxTree* id=newIDNode($1);
                   $$ = newOpNode($2, id , $3);
                   SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1;
                   addTriple($2, $3, s); addQuadruple($2, $3, s, id);
                   }
-  ;
+  | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
 
@@ -71,8 +71,8 @@ elif_statement: ELIF B COLON NL indent_statement  {newBoolLabelNode("root", $2);
 
 while_statement : WHILE B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newWhileNode($1, $2, $5);};
 
-indent_statement : SPACE S { $$ = $2;}
-                 | indent_statement NL indent_statement {$$ = newStJoinNode($1, $3);}
+indent_statement : SPACE S NL{ $$ = $2;}
+                 | indent_statement indent_statement {$$ = newStJoinNode($1, $2);}
                  | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
@@ -102,5 +102,6 @@ void yyerror(const char *s) {
 int main() {
     yyin = fopen("file.py","r");
     yyparse();
+    saveTriple(); saveQuadruple();
     return 0;
 }

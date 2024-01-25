@@ -71,8 +71,8 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 "<<"        {yylval.op = strdup(yytext); return bitwise;}
 
 ":"         {yylval.delim = strdup(yytext); return COLON;}
-"\t"+       {yylval.delim = strdup(yytext); return SPACE;}
-"    "        {yylval.delim = strdup(yytext); return SPACE;}
+"\t"        {yylval.delim = strdup(yytext); return SPACE;}
+"    "      {yylval.delim = strdup(yytext); return SPACE;}
 "\n"        {yylval.delim = strdup(yytext); return NL;}
 "("         {yylval.delim = strdup(yytext); return "(";}
 ")"         {yylval.delim = strdup(yytext); return ")";}

@@ -1,12 +1,14 @@
-a=0
-while c or d:
-    kk=0
+h=0
+k=0
+aa=b+c
+while b and c:
+    kkk=0
 else:
-    c=0
+    b=0
 
 if a and b:
-    e=0
-elif c or d:
-    kk=0
+    f=b+c*d 
+else:
+    f=0
 
-aa=b+c
+aa=0
