@@ -49,20 +49,20 @@ SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r);
 SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
 
 
-#define ID_NODE 'I'
-#define INT_NODE 'D'
-#define DOUBLE_NODE 'F'
-#define ASS_NODE '='
-#define AR_NODE '+'
-#define REL_NODE '>'
-#define LOG_NODE 'a'
-#define MEM_NODE 'i'
-#define IDENTITY_NODE 's'
-#define BIT_NODE '&'
-#define UMINUS_NODE 'M'
-#define IF_NODE 'e'
-#define ST_NODE 'S'
-#define ELSE_NODE 'E'
-#define ELIF_NODE 'L'
-#define WHILE_NODE 'W'
-#define STR_NODE '"'
+#define ID_NODE 101
+#define INT_NODE 102
+#define DOUBLE_NODE 103
+#define ASS_NODE 104
+#define AR_NODE 105
+#define REL_NODE 106
+#define LOG_NODE 107
+#define MEM_NODE 108
+#define IDENTITY_NODE 109
+#define BIT_NODE 110
+#define UMINUS_NODE 111
+#define IF_NODE 112
+#define ST_NODE 113
+#define ELSE_NODE 114
+#define ELIF_NODE 115
+#define WHILE_NODE 116
+#define STR_NODE 117

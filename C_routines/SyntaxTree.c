@@ -295,8 +295,8 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     sprintf(l->next, "%s", l->True);
     sprintf(node->True, "%s", l->True);
     sprintf(node->False, "%s", l->False);
-    sprintf(node->next, "L%d", label++);
     sprintf(r->next, "L%d", label++);
+    sprintf(node->next, "L%d", label++);
     sprintf(code, "%s : %s\n%s :%sgoto %s\n%s : ", r->next, strdup(l->code), l->True, strdup(r->code), r->next, l->False);
     node->code = strdup(code);
     return node;
@@ -322,7 +322,7 @@ SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r){
 /*Printing*/
 
 void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) {
-    if (node != NULL) {
+    if ((node != NULL) && (node->nodetype!=-1)) {
         int i;
         for (i= 0; i < depth; i++) {
             fprintf(file, "  "); 
@@ -330,16 +330,19 @@ void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) {
 
         switch (node->nodetype) {
             case ID_NODE:
-                fprintf(file, "|-- %s\n", node->value.id);
+                fprintf(file, "|-- %s\n", node->addr);
                 break;
             case IF_NODE:
-                fprintf(file, "|-- If\n");
+                fprintf(file, "|-- If(True : %s, next : %s)\n", node->True, node->next);
+                break;
+            case ST_NODE:
+                fprintf(file, "|-- S\n");
                 break;
             case ELIF_NODE:
                 fprintf(file, "|-- elif\n");
                 break;
             case WHILE_NODE:
-                fprintf(file, "|-- while\n");
+                fprintf(file, "|-- while (True : %s, next : %s)\n", node->True, node->next);
                 break;
             case INT_NODE:
                 fprintf(file, "|-- %s\n", node->value.intval);
@@ -357,16 +360,12 @@ void printSyntaxTreeHelper(FILE *file, SyntaxTree *node, int depth) {
                 fprintf(file, "|-- %s\n", node->value.op);
                 break;
             case LOG_NODE:
-                fprintf(file, "|-- %s\n", node->value.op);
-                for (i = 0; i <= depth; i++) {
-                    fprintf(file, "  ");
-                }
-                fprintf(file, "|-- %s - %s\n", node->True, node->False);
+                fprintf(file, "|-- %s (True : %s, False : %s)\n", node->value.op, node->True, node->False);
                 break;
         }
-
-        printSyntaxTreeHelper(file, node->l, depth + 2);
-        printSyntaxTreeHelper(file, node->r, depth + 2);
+        depth += 2;
+        printSyntaxTreeHelper(file, node->l, depth);
+        printSyntaxTreeHelper(file, node->r, depth);
     }
 }
 

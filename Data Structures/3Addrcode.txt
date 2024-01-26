@@ -6,12 +6,12 @@ h=t4
 k=0
 t7=b+c
 aa=t7
-L5 : if b : goto L3
+L4 : if b : goto L3
 goto L2
 L3:  if c : goto L1
 goto L2
 L1 :kkk=0
-goto L5
+goto L4
 L2 : b=0
 if a : goto L8
 goto L7
