@@ -5,9 +5,11 @@
 #include "CodeOptim.h"
 
 int li=0;
+int block_num[100];
+int b=0;
 
-void splitLines() {
-    FILE *file = fopen("../Data Structures/3Addrcode.txt", "r");
+void splitLines(char *filename) {
+    FILE *file = fopen(filename, "r");
      if (file == NULL) {
         fprintf(stderr, "Error opening file %s for writing");
         return;
@@ -48,6 +50,8 @@ void Convert() {
                     char buf[10];
                     sprintf(buf, "L%d", lineNumber);
                     int index = LabeltoIndex(buf);
+                    block_num[b++]=index;
+                    block_num[b++]=i+2;
                     sprintf(code, "%sif %s : goto (%d)\n", code, string2, index);
                 } else {
                     strcat(code, string1);
@@ -59,11 +63,15 @@ void Convert() {
             sprintf(buf, "L%d", lineNumber);
             int index = LabeltoIndex(buf);
             sprintf(code, "%s%s (%d)\n", code, string1, index);
+            block_num[b++]=index;
+            block_num[b++]=i+2;
         } else if (sscanf(lines[i], "if %s : goto L%d", string1, &lineNumber) == 2){
             char buf[10];
             sprintf(buf, "L%d", lineNumber);
             int index = LabeltoIndex(buf);
             sprintf(code, "%sif %s : goto (%d)\n", code, string1, index);
+            block_num[b++]=index;
+            block_num[b++]=i+2;
         } else {
             if (string1 != NULL) {
                 strcat(code, lines[i]);
@@ -75,8 +83,41 @@ void Convert() {
     fclose(file);
 }
 
+int* RemoveDupandSort(){
+    int* uniqueArr = (int*)malloc(b*sizeof(int));
+    int index = 1, j, i, temp;
+    uniqueArr[0] = block_num[0];
+
+    for (i = 1; i < b; i++) {
+        for (j = 0; j < index; j++) {
+            if (block_num[i] == uniqueArr[j]) {
+                break;
+            }
+        }
+        if (j == index) {
+            uniqueArr[index] = block_num[i];
+            index++;
+        }
+    }
+    for (i = 0; i < index - 1; i++) {
+        for (j = 0; j < index - i - 1; j++) {
+            if (uniqueArr[j] > uniqueArr[j + 1]) {
+                temp = uniqueArr[j];
+                uniqueArr[j] = uniqueArr[j + 1];
+                uniqueArr[j + 1] = temp;
+            }
+        }
+    }
+    b=index;
+    return uniqueArr;
+}
+
 int main(){
-    splitLines();
+    int i=0;
+    splitLines("../Data Structures/3Addrcode.txt");
     Convert();
+    int* uniqueArr = RemoveDupandSort();
+    for(i=0;i<b;i++)
+        printf("%d ", uniqueArr[i]);
     return 1;
 }
