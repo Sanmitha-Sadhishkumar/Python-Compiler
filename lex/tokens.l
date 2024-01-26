@@ -17,9 +17,10 @@ FLOAT [-]?[0-9]+([.][0-9]+)?([Ee][+-]?[0-9]+)?
 bool "True" | "False"
 str (\"([^\"\\\\]|\\\\.)*\")|('([^'\\\\]|\\\\.)*')
 
-assign [+/%*&|^]?= 
-arith [+-/%*] 
-relop ">"|"<"|"=="|">="|"<="|"!="
+list \[.*\]
+tuple \(.*\)
+set \{.+\}
+dict \{(.+:.+,?)*\}
 
 %%
 
@@ -27,7 +28,7 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 
 "else"      {yylval.key = strdup(yytext); return ELSE;}
 
-"while"      {yylval.key = strdup(yytext); return WHILE;}
+"while"     {yylval.key = strdup(yytext); return WHILE;}
 
 "elif"      {yylval.key = strdup(yytext); return ELIF;}
 
@@ -35,40 +36,59 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 
 "False"     {yylval.key = strdup(yytext); return FALSE;}
 
-{INT}       {int a = installLit(yytext,"INT"); yylval.value = strdup(yytext); return INT;}
+"="         { yylval.op = strdup(yytext); return EQ;}
+"+="        { yylval.op = strdup(yytext); return AEQ;}
+"-="        { yylval.op = strdup(yytext); return SEQ; }
+"//="       { yylval.op = strdup(yytext); return FDEQ; }
+"**="       { yylval.op = strdup(yytext); return EEQ; }
+"*="        { yylval.op = strdup(yytext); return MEQ;}
+"/="        { yylval.op = strdup(yytext); return DIEQ;}
+"%="        { yylval.op = strdup(yytext); return MOEQ;}
+">>="       { yylval.op = strdup(yytext); return BREQ; }
+"<<="       { yylval.op = strdup(yytext); return BLEQ; }
 
-{str}       {int a = installLit(yytext,"STR"); yylval.value = strdup(yytext); return LITERAL;}
-
-{FLOAT}     {int a = installLit(yytext,"FLOAT"); yylval.value = strdup(yytext); return FLOAT;}
-
-{assign}    { yylval.op = strdup(yytext); return assign; }
-"//="       { yylval.op = strdup(yytext); return assign; }
-"**="       { yylval.op = strdup(yytext); return assign; }
-">>="       { yylval.op = strdup(yytext); return assign; }
-"<<="       { yylval.op = strdup(yytext); return assign; }
-
-{arith}     { yylval.op = strdup(yytext); return arith;}
-"//"        { yylval.op = strdup(yytext); return arith; }
-"-"         { yylval.op = strdup(yytext); return "-"; }
-"**"        { yylval.op = strdup(yytext); return arith; }
+"+"         { yylval.op = strdup(yytext); return PLUS;}
+"**"        { yylval.op = strdup(yytext); return EXP; }
+"*"         { yylval.op = strdup(yytext); return MUL;}
+"//"        { yylval.op = strdup(yytext); return FDIV; }
+"/"         { yylval.op = strdup(yytext); return DIV;}
+"%"         { yylval.op = strdup(yytext); return MOD;}
+"-"         { yylval.op = strdup(yytext); return MINUS; }
 
 "and"       {yylval.op = strdup(yytext); return AND;}
 "or"        {yylval.op = strdup(yytext); return OR;}
 "not"       {yylval.op = strdup(yytext); return NOT;}
 
-"in"        {yylval.op = strdup(yytext); return membership;}
-"not in"    {yylval.op = strdup(yytext); return membership;}
+"in"        {yylval.op = strdup(yytext); return IN;}
+"not in"    {yylval.op = strdup(yytext); return NIN;}
 
-"is"        {yylval.op = strdup(yytext); return identity;}
-"is not"    {yylval.op = strdup(yytext); return identity;}
+"is"        {yylval.op = strdup(yytext); return IS;}
+"is not"    {yylval.op = strdup(yytext); return ISN;}
 
-{relop}     {yylval.op = strdup(yytext); return relop;}
+">"         {yylval.op = strdup(yytext); return GT;}
+"<"         {yylval.op = strdup(yytext); return LT;}
+">="        {yylval.op = strdup(yytext); return GTE;}
+"<="        {yylval.op = strdup(yytext); return LTE;}
+"=="        {yylval.op = strdup(yytext); return DEQ;}
+"!="        {yylval.op = strdup(yytext); return NE;}
 
-"&"         {yylval.op = strdup(yytext); return bitwise;}
-"|"         {yylval.op = strdup(yytext); return bitwise;}
-"^"         {yylval.op = strdup(yytext); return bitwise;}
-">>"        {yylval.op = strdup(yytext); return bitwise;}
-"<<"        {yylval.op = strdup(yytext); return bitwise;}
+"&"         {yylval.op = strdup(yytext); return BAND;}
+"~"         {yylval.op = strdup(yytext); return BNOT;}
+"|"         {yylval.op = strdup(yytext); return BOR;}
+"^"         {yylval.op = strdup(yytext); return BXOR;}
+">>"        {yylval.op = strdup(yytext); return RSHIFT;}
+"<<"        {yylval.op = strdup(yytext); return LSHIFT;}
+
+{INT}       {int a = installLit(yytext,"INT"); yylval.value = strdup(yytext); return INT;}
+{str}       {int a = installLit(yytext,"STR"); yylval.value = strdup(yytext); return LITERAL;}
+{FLOAT}     {int a = installLit(yytext,"FLOAT"); yylval.value = strdup(yytext); return FLOAT;}
+
+{list}      {int a = installID(yytext, "LIST"); yylval.lexeme = strdup(yytext); return LIST; }
+{tuple}     {int a = installID(yytext, "TUPLE"); yylval.lexeme = strdup(yytext); return TUPLE; }
+{set}       {int a = installID(yytext, "SET"); yylval.lexeme = strdup(yytext); return SET; }
+{dict}      {int a = installID(yytext, "DICT"); yylval.lexeme = strdup(yytext); return DICT; }
+
+{id}        {int a = installID(yytext, "ID"); yylval.lexeme = strdup(yytext); return id; }
 
 ":"         {yylval.delim = strdup(yytext); return COLON;}
 "\t"        {yylval.delim = strdup(yytext); return SPACE;}
@@ -76,8 +96,6 @@ relop ">"|"<"|"=="|">="|"<="|"!="
 "\n"        {yylval.delim = strdup(yytext); return NL;}
 "("         {yylval.delim = strdup(yytext); return "(";}
 ")"         {yylval.delim = strdup(yytext); return ")";}
-
-{id}        {int a = installID(yytext, "ID"); yylval.lexeme = strdup(yytext); return id; }
 
 <<EOF>>     {saveST(); return 0;}
 

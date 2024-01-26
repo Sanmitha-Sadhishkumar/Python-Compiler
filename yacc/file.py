@@ -1,4 +1,4 @@
-h=0
+h=0**b//h-d**t
 k=0
 aa=b+c
 while b and c:

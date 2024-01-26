@@ -1,21 +1,25 @@
-h=0
+t1=d**t
+t2=h-t1
+t3=b//t2
+t4=0**t3
+h=t4
 k=0
-t3=b+c
-aa=t3
+t7=b+c
+aa=t7
 L5 : if b : goto L3
 goto L2
 L3:  if c : goto L1
- goto L2
+goto L2
 L1 :kkk=0
 goto L5
 L2 : b=0
 if a : goto L8
 goto L7
 L8:  if b : goto L6
- goto L7
-L6 :t7=b+c
-t8=t7*d
-f=t8
+goto L7
+L6 : t11=c*d
+t12=b+t11
+f=t12
 goto L9
 L7 : f=0
 L9 : aa=0

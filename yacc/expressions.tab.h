@@ -44,28 +44,58 @@
      LITERAL = 260,
      FLOAT = 261,
      INT = 262,
-     relop = 263,
-     arith = 264,
-     assign = 265,
-     AND = 266,
-     OR = 267,
-     NOT = 268,
-     membership = 269,
-     identity = 270,
-     bitwise = 271,
-     IF = 272,
-     ELSE = 273,
-     ELIF = 274,
-     WHILE = 275,
-     FOR = 276,
-     TRUE = 277,
-     FALSE = 278,
-     DELIMITER = 279,
-     COLON = 280,
-     TAB = 281,
-     NL = 282,
-     SPACE = 283,
-     UMINUS = 284
+     AND = 263,
+     OR = 264,
+     NOT = 265,
+     PLUS = 266,
+     MINUS = 267,
+     MUL = 268,
+     DIV = 269,
+     MOD = 270,
+     EXP = 271,
+     FDIV = 272,
+     LT = 273,
+     GT = 274,
+     LTE = 275,
+     GTE = 276,
+     DEQ = 277,
+     NE = 278,
+     EQ = 279,
+     AEQ = 280,
+     SEQ = 281,
+     MEQ = 282,
+     DIEQ = 283,
+     FDEQ = 284,
+     EEQ = 285,
+     MOEQ = 286,
+     BLEQ = 287,
+     BREQ = 288,
+     IS = 289,
+     ISN = 290,
+     IN = 291,
+     NIN = 292,
+     LSHIFT = 293,
+     RSHIFT = 294,
+     BAND = 295,
+     BOR = 296,
+     BXOR = 297,
+     BNOT = 298,
+     IF = 299,
+     ELSE = 300,
+     ELIF = 301,
+     WHILE = 302,
+     FOR = 303,
+     TRUE = 304,
+     FALSE = 305,
+     DELIMITER = 306,
+     COLON = 307,
+     TAB = 308,
+     NL = 309,
+     SPACE = 310,
+     LIST = 311,
+     SET = 312,
+     TUPLE = 313,
+     DICT = 314
    };
 #endif
 
@@ -86,11 +116,12 @@ typedef union YYSTYPE
     char *op;
     char *key;
     char *delim;
+    char *coll[100];
 
 
 
 /* Line 1676 of yacc.c  */
-#line 94 "expressions.tab.h"
+#line 125 "expressions.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

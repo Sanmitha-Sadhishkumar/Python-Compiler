@@ -6,14 +6,16 @@ typedef struct SyntaxTree {
     int nodetype;
     union {
         char *id;
-        char* intval;
-        char* doubleval;
+        char *intval;
+        char *doubleval;
+        char *strval;
         char *op;
+        char *value[100];
     } value;
     char *addr;
     char *True;
     char *False;
-    char* next;
+    char *next;
     char *code;
     struct SyntaxTree *l;
     struct SyntaxTree *r;
@@ -22,9 +24,7 @@ typedef struct SyntaxTree {
 
 SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r);
 
-SyntaxTree * newDoubleNode(char* value);
-
-SyntaxTree * newIntNode(char* value);
+SyntaxTree* newLiteralNode(char* value, int type);
 
 SyntaxTree * newIDNode(char* id);
 
@@ -65,3 +65,4 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
 #define ELSE_NODE 'E'
 #define ELIF_NODE 'L'
 #define WHILE_NODE 'W'
+#define STR_NODE '"'
