@@ -4,7 +4,7 @@
 #include "SyntaxTree.h"
 
 int quad=1;
-int label =1;
+int label=1;
 
 /*literals*/
 // 1 - int, 2 - double, 3 - str
