@@ -10,7 +10,7 @@ int b=0;
 
 void splitLines(char *filename) {
     FILE *file = fopen(filename, "r");
-     if (file == NULL) {
+    if (file == NULL) {
         fprintf(stderr, "Error opening file %s for writing");
         return;
     }
@@ -112,12 +112,46 @@ int* RemoveDupandSort(){
     return uniqueArr;
 }
 
+char** BasicBlocks(int* uniqueArr){
+    int i=0, j=0, b1=0;
+    char** blocks = malloc(b * sizeof(char*));
+    blocks[0] = (char*)malloc(1000 * sizeof(char));
+    blocks[b1][0]='\0';
+    li=0;
+    splitLines("../Data Structures/3AddrcodewithoutLabel.txt");
+    for(i=0;i<li;i++){
+        int bnum = uniqueArr[j];
+        if((bnum-1)==li)
+            break;
+        if((i==bnum-1) && (i!=0)){
+            blocks[++b1] = (char*)malloc(1000 * sizeof(char));
+            blocks[b1][0]='\0';
+            j++;
+            sprintf(blocks[b1], "%s%s", blocks[b1], lines[i]);
+        } else {
+            sprintf(blocks[b1], "%s%s", blocks[b1], lines[i]);
+        }
+    }
+    return blocks;
+}
+
+void printBlocks(char **blocks){
+    FILE *file = fopen("../Data Structures/BasicBlocks.txt", "w");
+    int i;
+    char *B = (char*)malloc(sizeof(6));
+    for(i=0;i<=b;i++){
+        sprintf(B, "B%d", i);
+        fprintf(file, "%s: \n%s\n", B, blocks[i]);
+    }
+    fclose(file);
+}
+
 int main(){
     int i=0;
     splitLines("../Data Structures/3Addrcode.txt");
     Convert();
     int* uniqueArr = RemoveDupandSort();
-    for(i=0;i<b;i++)
-        printf("%d ", uniqueArr[i]);
+    char **blocks = BasicBlocks(uniqueArr);
+    printBlocks(blocks);
     return 1;
 }

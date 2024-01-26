@@ -1,0 +1,51 @@
+B0: 
+t1=d**t
+t2=h-t1
+t3=b//t2
+t4=0**t3
+h=t4
+k=0
+t7=b+c
+aa=t7
+
+B1: 
+if b : goto (11)
+
+B2: 
+goto (15)
+
+B3: 
+if c : goto (13)
+
+B4: 
+goto (15)
+
+B5: 
+kkk=0
+goto (9)
+
+B6: 
+b=0
+if a : goto (18)
+
+B7: 
+goto (24)
+
+B8: 
+if b : goto (20)
+
+B9: 
+goto (24)
+
+B10: 
+t11=c*d
+t12=b+t11
+f=t12
+goto (25)
+
+B11: 
+f=0
+
+B12: 
+aa=0
+

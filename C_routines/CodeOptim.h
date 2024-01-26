@@ -10,3 +10,9 @@ char* lines[MAX_ROWS];
 void splitLines();
 
 int LabeltoIndex(char* s);
+
+int* RemoveDupandSort();
+
+char** BasicBlocks(int* uniqueArr);
+
+void printBlocks(char **blocks);
