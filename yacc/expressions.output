@@ -5,27 +5,23 @@ Terminals unused in grammar
    FOR
    DELIMITER
    TAB
-   LIST
-   SET
-   TUPLE
-   DICT
 
 
 State 0 conflicts: 1 reduce/reduce
-State 11 conflicts: 1 shift/reduce
-State 35 conflicts: 1 reduce/reduce
-State 38 conflicts: 2 shift/reduce, 2 reduce/reduce
-State 80 conflicts: 1 shift/reduce, 4 reduce/reduce
-State 82 conflicts: 23 shift/reduce
-State 85 conflicts: 1 shift/reduce
-State 86 conflicts: 1 shift/reduce
-State 88 conflicts: 1 shift/reduce
-State 90 conflicts: 1 shift/reduce, 4 reduce/reduce
-State 91 conflicts: 1 shift/reduce, 3 reduce/reduce
-State 92 conflicts: 1 shift/reduce
-State 93 conflicts: 1 shift/reduce, 2 reduce/reduce
-State 95 conflicts: 1 shift/reduce, 5 reduce/reduce
-State 96 conflicts: 1 shift/reduce, 4 reduce/reduce
+State 14 conflicts: 1 shift/reduce
+State 45 conflicts: 1 reduce/reduce
+State 48 conflicts: 2 shift/reduce, 2 reduce/reduce
+State 94 conflicts: 1 shift/reduce, 4 reduce/reduce
+State 96 conflicts: 23 shift/reduce
+State 99 conflicts: 1 shift/reduce
+State 100 conflicts: 1 shift/reduce
+State 103 conflicts: 1 shift/reduce
+State 105 conflicts: 1 shift/reduce, 4 reduce/reduce
+State 106 conflicts: 1 shift/reduce, 3 reduce/reduce
+State 107 conflicts: 1 shift/reduce
+State 108 conflicts: 1 shift/reduce, 2 reduce/reduce
+State 110 conflicts: 1 shift/reduce, 5 reduce/reduce
+State 111 conflicts: 1 shift/reduce, 4 reduce/reduce
 
 
 Grammar
@@ -36,1228 +32,1439 @@ Grammar
 
     2 P: S
     3  | S NL P
-    4  | /* empty */
+    4  | LIST
+    5  | TUPLE
+    6  | SET
+    7  | /* empty */
 
-    5 S: if_statement else_elif
-    6  | while_statement else_statement
-    7  | id assign E
-    8  | E
-    9  | /* empty */
+    8 S: if_statement else_elif
+    9  | while_statement else_statement
+   10  | id assign E
+   11  | E
+   12  | /* empty */
 
-   10 if_statement: IF B COLON NL indent_statement
+   13 if_statement: IF B COLON NL indent_statement
 
-   11 else_elif: elif_statement else_statement
+   14 else_elif: elif_statement else_statement
 
-   12 else_statement: ELSE COLON NL indent_statement
-   13               | /* empty */
-
-   14 elif_statement: ELIF B COLON NL indent_statement
-   15               | elif_statement elif_statement
+   15 else_statement: ELSE COLON NL indent_statement
    16               | /* empty */
 
-   17 while_statement: WHILE B COLON NL indent_statement
+   17 elif_statement: ELIF B COLON NL indent_statement
+   18               | elif_statement elif_statement
+   19               | /* empty */
 
-   18 indent_statement: SPACE S NL
-   19                 | indent_statement indent_statement
-   20                 | /* empty */
+   20 while_statement: WHILE B COLON NL indent_statement
 
-   21 B: B OR B
-   22  | B AND B
-   23  | NOT B
-   24  | E
-   25  | TRUE
-   26  | FALSE
+   21 indent_statement: SPACE S NL
+   22                 | indent_statement indent_statement
+   23                 | /* empty */
 
-   27 E: E oper E
-   28  | "(" E ")"
-   29  | MINUS E
-   30  | id
-   31  | INT
-   32  | FLOAT
+   24 B: B OR B
+   25  | B AND B
+   26  | NOT B
+   27  | E
+   28  | TRUE
+   29  | FALSE
 
-   33 oper: arith
-   34     | relop
-   35     | identity
-   36     | membership
-   37     | bitwise
+   30 E: E oper E
+   31  | "(" E ")"
+   32  | MINUS E
+   33  | id
+   34  | INT
+   35  | FLOAT
 
-   38 arith: PLUS
-   39      | MINUS
-   40      | MUL
-   41      | DIV
-   42      | FDIV
-   43      | EXP
-   44      | MOD
+   36 LIST: LISTO ECOM LISTC
 
-   45 relop: LT
-   46      | LTE
-   47      | GT
-   48      | GTE
-   49      | NE
-   50      | DEQ
+   37 TUPLE: TUPLEO ECOM TUPLEC
 
-   51 assign: EQ
-   52       | AEQ
-   53       | SEQ
-   54       | MEQ
-   55       | DIEQ
-   56       | FDEQ
-   57       | EEQ
-   58       | MOEQ
-   59       | BLEQ
-   60       | BREQ
+   38 SET: SETO ECOM SETC
 
-   61 identity: IS
-   62         | ISN
+   39 ECOM: E COMMA ECOM
+   40     | E
+   41     | /* empty */
 
-   63 membership: IN
-   64           | NIN
+   42 oper: arith
+   43     | relop
+   44     | identity
+   45     | membership
+   46     | bitwise
 
-   65 bitwise: BAND
-   66        | BOR
-   67        | BXOR
-   68        | BNOT
-   69        | LSHIFT
-   70        | RSHIFT
+   47 arith: PLUS
+   48      | MINUS
+   49      | MUL
+   50      | DIV
+   51      | FDIV
+   52      | EXP
+   53      | MOD
+
+   54 relop: LT
+   55      | LTE
+   56      | GT
+   57      | GTE
+   58      | NE
+   59      | DEQ
+
+   60 assign: EQ
+   61       | AEQ
+   62       | SEQ
+   63       | MEQ
+   64       | DIEQ
+   65       | FDEQ
+   66       | EEQ
+   67       | MOEQ
+   68       | BLEQ
+   69       | BREQ
+
+   70 identity: IS
+   71         | ISN
+
+   72 membership: IN
+   73           | NIN
+
+   74 bitwise: BAND
+   75        | BOR
+   76        | BXOR
+   77        | BNOT
+   78        | LSHIFT
+   79        | RSHIFT
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-id (258) 7 30
+id (258) 10 33
 ID (259)
 LITERAL (260)
-FLOAT (261) 32
-INT (262) 31
-AND (263) 22
-OR (264) 21
-NOT (265) 23
-PLUS (266) 38
-MINUS (267) 29 39
-MUL (268) 40
-DIV (269) 41
-MOD (270) 44
-EXP (271) 43
-FDIV (272) 42
-LT (273) 45
-GT (274) 47
-LTE (275) 46
-GTE (276) 48
-DEQ (277) 50
-NE (278) 49
-EQ (279) 51
-AEQ (280) 52
-SEQ (281) 53
-MEQ (282) 54
-DIEQ (283) 55
-FDEQ (284) 56
-EEQ (285) 57
-MOEQ (286) 58
-BLEQ (287) 59
-BREQ (288) 60
-IS (289) 61
-ISN (290) 62
-IN (291) 63
-NIN (292) 64
-LSHIFT (293) 69
-RSHIFT (294) 70
-BAND (295) 65
-BOR (296) 66
-BXOR (297) 67
-BNOT (298) 68
-IF (299) 10
-ELSE (300) 12
-ELIF (301) 14
-WHILE (302) 17
+FLOAT (261) 35
+INT (262) 34
+AND (263) 25
+OR (264) 24
+NOT (265) 26
+PLUS (266) 47
+MINUS (267) 32 48
+MUL (268) 49
+DIV (269) 50
+MOD (270) 53
+EXP (271) 52
+FDIV (272) 51
+LT (273) 54
+GT (274) 56
+LTE (275) 55
+GTE (276) 57
+DEQ (277) 59
+NE (278) 58
+EQ (279) 60
+AEQ (280) 61
+SEQ (281) 62
+MEQ (282) 63
+DIEQ (283) 64
+FDEQ (284) 65
+EEQ (285) 66
+MOEQ (286) 67
+BLEQ (287) 68
+BREQ (288) 69
+IS (289) 70
+ISN (290) 71
+IN (291) 72
+NIN (292) 73
+LSHIFT (293) 78
+RSHIFT (294) 79
+BAND (295) 74
+BOR (296) 75
+BXOR (297) 76
+BNOT (298) 77
+IF (299) 13
+ELSE (300) 15
+ELIF (301) 17
+WHILE (302) 20
 FOR (303)
-TRUE (304) 25
-FALSE (305) 26
+TRUE (304) 28
+FALSE (305) 29
 DELIMITER (306)
-COLON (307) 10 12 14 17
+COLON (307) 13 15 17 20
 TAB (308)
-NL (309) 3 10 12 14 17 18
-SPACE (310) 18
-LIST (311)
-SET (312)
-TUPLE (313)
-DICT (314)
-"(" (315) 28
-")" (316) 28
+NL (309) 3 13 15 17 20 21
+SPACE (310) 21
+COMMA (311) 39
+LISTO (312) 36
+LISTC (313) 36
+TUPLEO (314) 37
+TUPLEC (315) 37
+SETO (316) 38
+SETC (317) 38
+"(" (318) 31
+")" (319) 31
 
 
 Nonterminals, with rules where they appear
 
-$accept (62)
+$accept (65)
     on left: 0
-G (63)
+G (66)
     on left: 1, on right: 0
-P (64)
-    on left: 2 3 4, on right: 1 3
-S (65)
-    on left: 5 6 7 8 9, on right: 2 3 18
-if_statement (66)
-    on left: 10, on right: 5
-else_elif (67)
-    on left: 11, on right: 5
-else_statement (68)
-    on left: 12 13, on right: 6 11
-elif_statement (69)
-    on left: 14 15 16, on right: 11 15
-while_statement (70)
-    on left: 17, on right: 6
-indent_statement (71)
-    on left: 18 19 20, on right: 10 12 14 17 19
-B (72)
-    on left: 21 22 23 24 25 26, on right: 10 14 17 21 22 23
-E (73)
-    on left: 27 28 29 30 31 32, on right: 7 8 24 27 28 29
-oper (74)
-    on left: 33 34 35 36 37, on right: 27
-arith (75)
-    on left: 38 39 40 41 42 43 44, on right: 33
-relop (76)
-    on left: 45 46 47 48 49 50, on right: 34
-assign (77)
-    on left: 51 52 53 54 55 56 57 58 59 60, on right: 7
-identity (78)
-    on left: 61 62, on right: 35
-membership (79)
-    on left: 63 64, on right: 36
-bitwise (80)
-    on left: 65 66 67 68 69 70, on right: 37
+P (67)
+    on left: 2 3 4 5 6 7, on right: 1 3
+S (68)
+    on left: 8 9 10 11 12, on right: 2 3 21
+if_statement (69)
+    on left: 13, on right: 8
+else_elif (70)
+    on left: 14, on right: 8
+else_statement (71)
+    on left: 15 16, on right: 9 14
+elif_statement (72)
+    on left: 17 18 19, on right: 14 18
+while_statement (73)
+    on left: 20, on right: 9
+indent_statement (74)
+    on left: 21 22 23, on right: 13 15 17 20 22
+B (75)
+    on left: 24 25 26 27 28 29, on right: 13 17 20 24 25 26
+E (76)
+    on left: 30 31 32 33 34 35, on right: 10 11 27 30 31 32 39 40
+LIST (77)
+    on left: 36, on right: 4
+TUPLE (78)
+    on left: 37, on right: 5
+SET (79)
+    on left: 38, on right: 6
+ECOM (80)
+    on left: 39 40 41, on right: 36 37 38 39
+oper (81)
+    on left: 42 43 44 45 46, on right: 30
+arith (82)
+    on left: 47 48 49 50 51 52 53, on right: 42
+relop (83)
+    on left: 54 55 56 57 58 59, on right: 43
+assign (84)
+    on left: 60 61 62 63 64 65 66 67 68 69, on right: 10
+identity (85)
+    on left: 70 71, on right: 44
+membership (86)
+    on left: 72 73, on right: 45
+bitwise (87)
+    on left: 74 75 76 77 78 79, on right: 46
 
 
 state 0
 
     0 $accept: . G $end
 
-    id     shift, and go to state 1
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    MINUS  shift, and go to state 4
-    IF     shift, and go to state 5
-    WHILE  shift, and go to state 6
-    "("    shift, and go to state 7
+    id      shift, and go to state 1
+    FLOAT   shift, and go to state 2
+    INT     shift, and go to state 3
+    MINUS   shift, and go to state 4
+    IF      shift, and go to state 5
+    WHILE   shift, and go to state 6
+    LISTO   shift, and go to state 7
+    TUPLEO  shift, and go to state 8
+    SETO    shift, and go to state 9
+    "("     shift, and go to state 10
 
-    $end      reduce using rule 4 (P)
-    $end      [reduce using rule 9 (S)]
-    NL        reduce using rule 9 (S)
-    $default  reduce using rule 4 (P)
+    $end      reduce using rule 7 (P)
+    $end      [reduce using rule 12 (S)]
+    NL        reduce using rule 12 (S)
+    $default  reduce using rule 7 (P)
 
-    G                go to state 8
-    P                go to state 9
-    S                go to state 10
-    if_statement     go to state 11
-    while_statement  go to state 12
-    E                go to state 13
+    G                go to state 11
+    P                go to state 12
+    S                go to state 13
+    if_statement     go to state 14
+    while_statement  go to state 15
+    E                go to state 16
+    LIST             go to state 17
+    TUPLE            go to state 18
+    SET              go to state 19
 
 
 state 1
 
-    7 S: id . assign E
-   30 E: id .
+   10 S: id . assign E
+   33 E: id .
 
-    EQ    shift, and go to state 14
-    AEQ   shift, and go to state 15
-    SEQ   shift, and go to state 16
-    MEQ   shift, and go to state 17
-    DIEQ  shift, and go to state 18
-    FDEQ  shift, and go to state 19
-    EEQ   shift, and go to state 20
-    MOEQ  shift, and go to state 21
-    BLEQ  shift, and go to state 22
-    BREQ  shift, and go to state 23
+    EQ    shift, and go to state 20
+    AEQ   shift, and go to state 21
+    SEQ   shift, and go to state 22
+    MEQ   shift, and go to state 23
+    DIEQ  shift, and go to state 24
+    FDEQ  shift, and go to state 25
+    EEQ   shift, and go to state 26
+    MOEQ  shift, and go to state 27
+    BLEQ  shift, and go to state 28
+    BREQ  shift, and go to state 29
 
-    $default  reduce using rule 30 (E)
+    $default  reduce using rule 33 (E)
 
-    assign  go to state 24
+    assign  go to state 30
 
 
 state 2
 
-   32 E: FLOAT .
+   35 E: FLOAT .
 
-    $default  reduce using rule 32 (E)
+    $default  reduce using rule 35 (E)
 
 
 state 3
 
-   31 E: INT .
+   34 E: INT .
 
-    $default  reduce using rule 31 (E)
+    $default  reduce using rule 34 (E)
 
 
 state 4
 
-   29 E: MINUS . E
+   32 E: MINUS . E
 
-    id     shift, and go to state 25
+    id     shift, and go to state 31
     FLOAT  shift, and go to state 2
     INT    shift, and go to state 3
     MINUS  shift, and go to state 4
-    "("    shift, and go to state 7
+    "("    shift, and go to state 10
 
-    E  go to state 26
+    E  go to state 32
 
 
 state 5
 
-   10 if_statement: IF . B COLON NL indent_statement
+   13 if_statement: IF . B COLON NL indent_statement
 
-    id     shift, and go to state 25
+    id     shift, and go to state 31
     FLOAT  shift, and go to state 2
     INT    shift, and go to state 3
-    NOT    shift, and go to state 27
+    NOT    shift, and go to state 33
     MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
 
-    B  go to state 30
-    E  go to state 31
+    B  go to state 36
+    E  go to state 37
 
 
 state 6
 
-   17 while_statement: WHILE . B COLON NL indent_statement
+   20 while_statement: WHILE . B COLON NL indent_statement
 
-    id     shift, and go to state 25
+    id     shift, and go to state 31
     FLOAT  shift, and go to state 2
     INT    shift, and go to state 3
-    NOT    shift, and go to state 27
+    NOT    shift, and go to state 33
     MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
 
-    B  go to state 32
-    E  go to state 31
+    B  go to state 38
+    E  go to state 37
 
 
 state 7
 
-   28 E: "(" . E ")"
+   36 LIST: LISTO . ECOM LISTC
 
-    id     shift, and go to state 25
+    id     shift, and go to state 31
     FLOAT  shift, and go to state 2
     INT    shift, and go to state 3
     MINUS  shift, and go to state 4
-    "("    shift, and go to state 7
+    "("    shift, and go to state 10
 
-    E  go to state 33
+    $default  reduce using rule 41 (ECOM)
+
+    E     go to state 39
+    ECOM  go to state 40
 
 
 state 8
 
-    0 $accept: G . $end
+   37 TUPLE: TUPLEO . ECOM TUPLEC
 
-    $end  shift, and go to state 34
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    $default  reduce using rule 41 (ECOM)
+
+    E     go to state 39
+    ECOM  go to state 41
 
 
 state 9
+
+   38 SET: SETO . ECOM SETC
+
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    $default  reduce using rule 41 (ECOM)
+
+    E     go to state 39
+    ECOM  go to state 42
+
+
+state 10
+
+   31 E: "(" . E ")"
+
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    E  go to state 43
+
+
+state 11
+
+    0 $accept: G . $end
+
+    $end  shift, and go to state 44
+
+
+state 12
 
     1 G: P .
 
     $default  reduce using rule 1 (G)
 
 
-state 10
+state 13
 
     2 P: S .
     3  | S . NL P
 
-    NL  shift, and go to state 35
+    NL  shift, and go to state 45
 
     $default  reduce using rule 2 (P)
 
 
-state 11
-
-    5 S: if_statement . else_elif
-
-    ELIF  shift, and go to state 36
-
-    ELIF      [reduce using rule 16 (elif_statement)]
-    $default  reduce using rule 16 (elif_statement)
-
-    else_elif       go to state 37
-    elif_statement  go to state 38
-
-
-state 12
-
-    6 S: while_statement . else_statement
-
-    ELSE  shift, and go to state 39
-
-    $default  reduce using rule 13 (else_statement)
-
-    else_statement  go to state 40
-
-
-state 13
-
-    8 S: E .
-   27 E: E . oper E
-
-    PLUS    shift, and go to state 41
-    MINUS   shift, and go to state 42
-    MUL     shift, and go to state 43
-    DIV     shift, and go to state 44
-    MOD     shift, and go to state 45
-    EXP     shift, and go to state 46
-    FDIV    shift, and go to state 47
-    LT      shift, and go to state 48
-    GT      shift, and go to state 49
-    LTE     shift, and go to state 50
-    GTE     shift, and go to state 51
-    DEQ     shift, and go to state 52
-    NE      shift, and go to state 53
-    IS      shift, and go to state 54
-    ISN     shift, and go to state 55
-    IN      shift, and go to state 56
-    NIN     shift, and go to state 57
-    LSHIFT  shift, and go to state 58
-    RSHIFT  shift, and go to state 59
-    BAND    shift, and go to state 60
-    BOR     shift, and go to state 61
-    BXOR    shift, and go to state 62
-    BNOT    shift, and go to state 63
-
-    $default  reduce using rule 8 (S)
-
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
-
-
 state 14
 
-   51 assign: EQ .
+    8 S: if_statement . else_elif
 
-    $default  reduce using rule 51 (assign)
+    ELIF  shift, and go to state 46
+
+    ELIF      [reduce using rule 19 (elif_statement)]
+    $default  reduce using rule 19 (elif_statement)
+
+    else_elif       go to state 47
+    elif_statement  go to state 48
 
 
 state 15
 
-   52 assign: AEQ .
+    9 S: while_statement . else_statement
 
-    $default  reduce using rule 52 (assign)
+    ELSE  shift, and go to state 49
+
+    $default  reduce using rule 16 (else_statement)
+
+    else_statement  go to state 50
 
 
 state 16
 
-   53 assign: SEQ .
+   11 S: E .
+   30 E: E . oper E
 
-    $default  reduce using rule 53 (assign)
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
+
+    $default  reduce using rule 11 (S)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
 
 
 state 17
 
-   54 assign: MEQ .
+    4 P: LIST .
 
-    $default  reduce using rule 54 (assign)
+    $default  reduce using rule 4 (P)
 
 
 state 18
 
-   55 assign: DIEQ .
+    5 P: TUPLE .
 
-    $default  reduce using rule 55 (assign)
+    $default  reduce using rule 5 (P)
 
 
 state 19
 
-   56 assign: FDEQ .
+    6 P: SET .
 
-    $default  reduce using rule 56 (assign)
+    $default  reduce using rule 6 (P)
 
 
 state 20
 
-   57 assign: EEQ .
-
-    $default  reduce using rule 57 (assign)
-
-
-state 21
-
-   58 assign: MOEQ .
-
-    $default  reduce using rule 58 (assign)
-
-
-state 22
-
-   59 assign: BLEQ .
-
-    $default  reduce using rule 59 (assign)
-
-
-state 23
-
-   60 assign: BREQ .
+   60 assign: EQ .
 
     $default  reduce using rule 60 (assign)
 
 
+state 21
+
+   61 assign: AEQ .
+
+    $default  reduce using rule 61 (assign)
+
+
+state 22
+
+   62 assign: SEQ .
+
+    $default  reduce using rule 62 (assign)
+
+
+state 23
+
+   63 assign: MEQ .
+
+    $default  reduce using rule 63 (assign)
+
+
 state 24
 
-    7 S: id assign . E
+   64 assign: DIEQ .
 
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    MINUS  shift, and go to state 4
-    "("    shift, and go to state 7
-
-    E  go to state 70
+    $default  reduce using rule 64 (assign)
 
 
 state 25
 
-   30 E: id .
+   65 assign: FDEQ .
 
-    $default  reduce using rule 30 (E)
+    $default  reduce using rule 65 (assign)
 
 
 state 26
 
-   27 E: E . oper E
-   29  | MINUS E .
+   66 assign: EEQ .
 
-    MUL   shift, and go to state 43
-    DIV   shift, and go to state 44
-    MOD   shift, and go to state 45
-    EXP   shift, and go to state 46
-    FDIV  shift, and go to state 47
-    BNOT  shift, and go to state 63
-
-    $default  reduce using rule 29 (E)
-
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
+    $default  reduce using rule 66 (assign)
 
 
 state 27
 
-   23 B: NOT . B
+   67 assign: MOEQ .
 
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    NOT    shift, and go to state 27
-    MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
-
-    B  go to state 71
-    E  go to state 31
+    $default  reduce using rule 67 (assign)
 
 
 state 28
 
-   25 B: TRUE .
+   68 assign: BLEQ .
 
-    $default  reduce using rule 25 (B)
+    $default  reduce using rule 68 (assign)
 
 
 state 29
 
-   26 B: FALSE .
+   69 assign: BREQ .
 
-    $default  reduce using rule 26 (B)
+    $default  reduce using rule 69 (assign)
 
 
 state 30
 
-   10 if_statement: IF B . COLON NL indent_statement
-   21 B: B . OR B
-   22  | B . AND B
+   10 S: id assign . E
 
-    AND    shift, and go to state 72
-    OR     shift, and go to state 73
-    COLON  shift, and go to state 74
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    E  go to state 80
 
 
 state 31
 
-   24 B: E .
-   27 E: E . oper E
+   33 E: id .
 
-    PLUS    shift, and go to state 41
-    MINUS   shift, and go to state 42
-    MUL     shift, and go to state 43
-    DIV     shift, and go to state 44
-    MOD     shift, and go to state 45
-    EXP     shift, and go to state 46
-    FDIV    shift, and go to state 47
-    LT      shift, and go to state 48
-    GT      shift, and go to state 49
-    LTE     shift, and go to state 50
-    GTE     shift, and go to state 51
-    DEQ     shift, and go to state 52
-    NE      shift, and go to state 53
-    IS      shift, and go to state 54
-    ISN     shift, and go to state 55
-    IN      shift, and go to state 56
-    NIN     shift, and go to state 57
-    LSHIFT  shift, and go to state 58
-    RSHIFT  shift, and go to state 59
-    BAND    shift, and go to state 60
-    BOR     shift, and go to state 61
-    BXOR    shift, and go to state 62
-    BNOT    shift, and go to state 63
-
-    $default  reduce using rule 24 (B)
-
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
+    $default  reduce using rule 33 (E)
 
 
 state 32
 
-   17 while_statement: WHILE B . COLON NL indent_statement
-   21 B: B . OR B
-   22  | B . AND B
+   30 E: E . oper E
+   32  | MINUS E .
 
-    AND    shift, and go to state 72
-    OR     shift, and go to state 73
-    COLON  shift, and go to state 75
+    MUL   shift, and go to state 53
+    DIV   shift, and go to state 54
+    MOD   shift, and go to state 55
+    EXP   shift, and go to state 56
+    FDIV  shift, and go to state 57
+    BNOT  shift, and go to state 73
+
+    $default  reduce using rule 32 (E)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
 
 
 state 33
 
-   27 E: E . oper E
-   28  | "(" E . ")"
+   26 B: NOT . B
 
-    PLUS    shift, and go to state 41
-    MINUS   shift, and go to state 42
-    MUL     shift, and go to state 43
-    DIV     shift, and go to state 44
-    MOD     shift, and go to state 45
-    EXP     shift, and go to state 46
-    FDIV    shift, and go to state 47
-    LT      shift, and go to state 48
-    GT      shift, and go to state 49
-    LTE     shift, and go to state 50
-    GTE     shift, and go to state 51
-    DEQ     shift, and go to state 52
-    NE      shift, and go to state 53
-    IS      shift, and go to state 54
-    ISN     shift, and go to state 55
-    IN      shift, and go to state 56
-    NIN     shift, and go to state 57
-    LSHIFT  shift, and go to state 58
-    RSHIFT  shift, and go to state 59
-    BAND    shift, and go to state 60
-    BOR     shift, and go to state 61
-    BXOR    shift, and go to state 62
-    BNOT    shift, and go to state 63
-    ")"     shift, and go to state 76
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    NOT    shift, and go to state 33
+    MINUS  shift, and go to state 4
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
 
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
+    B  go to state 81
+    E  go to state 37
 
 
 state 34
+
+   28 B: TRUE .
+
+    $default  reduce using rule 28 (B)
+
+
+state 35
+
+   29 B: FALSE .
+
+    $default  reduce using rule 29 (B)
+
+
+state 36
+
+   13 if_statement: IF B . COLON NL indent_statement
+   24 B: B . OR B
+   25  | B . AND B
+
+    AND    shift, and go to state 82
+    OR     shift, and go to state 83
+    COLON  shift, and go to state 84
+
+
+state 37
+
+   27 B: E .
+   30 E: E . oper E
+
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
+
+    $default  reduce using rule 27 (B)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
+
+
+state 38
+
+   20 while_statement: WHILE B . COLON NL indent_statement
+   24 B: B . OR B
+   25  | B . AND B
+
+    AND    shift, and go to state 82
+    OR     shift, and go to state 83
+    COLON  shift, and go to state 85
+
+
+state 39
+
+   30 E: E . oper E
+   39 ECOM: E . COMMA ECOM
+   40     | E .
+
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
+    COMMA   shift, and go to state 86
+
+    $default  reduce using rule 40 (ECOM)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
+
+
+state 40
+
+   36 LIST: LISTO ECOM . LISTC
+
+    LISTC  shift, and go to state 87
+
+
+state 41
+
+   37 TUPLE: TUPLEO ECOM . TUPLEC
+
+    TUPLEC  shift, and go to state 88
+
+
+state 42
+
+   38 SET: SETO ECOM . SETC
+
+    SETC  shift, and go to state 89
+
+
+state 43
+
+   30 E: E . oper E
+   31  | "(" E . ")"
+
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
+    ")"     shift, and go to state 90
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
+
+
+state 44
 
     0 $accept: G $end .
 
     $default  accept
 
 
-state 35
+state 45
 
     3 P: S NL . P
 
-    id     shift, and go to state 1
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    MINUS  shift, and go to state 4
-    IF     shift, and go to state 5
-    WHILE  shift, and go to state 6
-    "("    shift, and go to state 7
+    id      shift, and go to state 1
+    FLOAT   shift, and go to state 2
+    INT     shift, and go to state 3
+    MINUS   shift, and go to state 4
+    IF      shift, and go to state 5
+    WHILE   shift, and go to state 6
+    LISTO   shift, and go to state 7
+    TUPLEO  shift, and go to state 8
+    SETO    shift, and go to state 9
+    "("     shift, and go to state 10
 
-    $end      reduce using rule 4 (P)
-    $end      [reduce using rule 9 (S)]
-    NL        reduce using rule 9 (S)
-    $default  reduce using rule 4 (P)
+    $end      reduce using rule 7 (P)
+    $end      [reduce using rule 12 (S)]
+    NL        reduce using rule 12 (S)
+    $default  reduce using rule 7 (P)
 
-    P                go to state 77
-    S                go to state 10
-    if_statement     go to state 11
-    while_statement  go to state 12
-    E                go to state 13
-
-
-state 36
-
-   14 elif_statement: ELIF . B COLON NL indent_statement
-
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    NOT    shift, and go to state 27
-    MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
-
-    B  go to state 78
-    E  go to state 31
-
-
-state 37
-
-    5 S: if_statement else_elif .
-
-    $default  reduce using rule 5 (S)
-
-
-state 38
-
-   11 else_elif: elif_statement . else_statement
-   15 elif_statement: elif_statement . elif_statement
-
-    ELSE  shift, and go to state 39
-    ELIF  shift, and go to state 36
-
-    $end      reduce using rule 13 (else_statement)
-    $end      [reduce using rule 16 (elif_statement)]
-    ELSE      [reduce using rule 16 (elif_statement)]
-    ELIF      [reduce using rule 16 (elif_statement)]
-    NL        reduce using rule 13 (else_statement)
-    NL        [reduce using rule 16 (elif_statement)]
-    $default  reduce using rule 13 (else_statement)
-
-    else_statement  go to state 79
-    elif_statement  go to state 80
-
-
-state 39
-
-   12 else_statement: ELSE . COLON NL indent_statement
-
-    COLON  shift, and go to state 81
-
-
-state 40
-
-    6 S: while_statement else_statement .
-
-    $default  reduce using rule 6 (S)
-
-
-state 41
-
-   38 arith: PLUS .
-
-    $default  reduce using rule 38 (arith)
-
-
-state 42
-
-   39 arith: MINUS .
-
-    $default  reduce using rule 39 (arith)
-
-
-state 43
-
-   40 arith: MUL .
-
-    $default  reduce using rule 40 (arith)
-
-
-state 44
-
-   41 arith: DIV .
-
-    $default  reduce using rule 41 (arith)
-
-
-state 45
-
-   44 arith: MOD .
-
-    $default  reduce using rule 44 (arith)
+    P                go to state 91
+    S                go to state 13
+    if_statement     go to state 14
+    while_statement  go to state 15
+    E                go to state 16
+    LIST             go to state 17
+    TUPLE            go to state 18
+    SET              go to state 19
 
 
 state 46
 
-   43 arith: EXP .
+   17 elif_statement: ELIF . B COLON NL indent_statement
 
-    $default  reduce using rule 43 (arith)
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    NOT    shift, and go to state 33
+    MINUS  shift, and go to state 4
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
+
+    B  go to state 92
+    E  go to state 37
 
 
 state 47
 
-   42 arith: FDIV .
+    8 S: if_statement else_elif .
 
-    $default  reduce using rule 42 (arith)
+    $default  reduce using rule 8 (S)
 
 
 state 48
 
-   45 relop: LT .
+   14 else_elif: elif_statement . else_statement
+   18 elif_statement: elif_statement . elif_statement
 
-    $default  reduce using rule 45 (relop)
+    ELSE  shift, and go to state 49
+    ELIF  shift, and go to state 46
+
+    $end      reduce using rule 16 (else_statement)
+    $end      [reduce using rule 19 (elif_statement)]
+    ELSE      [reduce using rule 19 (elif_statement)]
+    ELIF      [reduce using rule 19 (elif_statement)]
+    NL        reduce using rule 16 (else_statement)
+    NL        [reduce using rule 19 (elif_statement)]
+    $default  reduce using rule 16 (else_statement)
+
+    else_statement  go to state 93
+    elif_statement  go to state 94
 
 
 state 49
 
-   47 relop: GT .
+   15 else_statement: ELSE . COLON NL indent_statement
 
-    $default  reduce using rule 47 (relop)
+    COLON  shift, and go to state 95
 
 
 state 50
 
-   46 relop: LTE .
+    9 S: while_statement else_statement .
 
-    $default  reduce using rule 46 (relop)
+    $default  reduce using rule 9 (S)
 
 
 state 51
 
-   48 relop: GTE .
+   47 arith: PLUS .
 
-    $default  reduce using rule 48 (relop)
+    $default  reduce using rule 47 (arith)
 
 
 state 52
 
-   50 relop: DEQ .
+   48 arith: MINUS .
 
-    $default  reduce using rule 50 (relop)
+    $default  reduce using rule 48 (arith)
 
 
 state 53
 
-   49 relop: NE .
+   49 arith: MUL .
 
-    $default  reduce using rule 49 (relop)
+    $default  reduce using rule 49 (arith)
 
 
 state 54
 
-   61 identity: IS .
+   50 arith: DIV .
 
-    $default  reduce using rule 61 (identity)
+    $default  reduce using rule 50 (arith)
 
 
 state 55
 
-   62 identity: ISN .
+   53 arith: MOD .
 
-    $default  reduce using rule 62 (identity)
+    $default  reduce using rule 53 (arith)
 
 
 state 56
 
-   63 membership: IN .
+   52 arith: EXP .
 
-    $default  reduce using rule 63 (membership)
+    $default  reduce using rule 52 (arith)
 
 
 state 57
 
-   64 membership: NIN .
+   51 arith: FDIV .
 
-    $default  reduce using rule 64 (membership)
+    $default  reduce using rule 51 (arith)
 
 
 state 58
 
-   69 bitwise: LSHIFT .
+   54 relop: LT .
 
-    $default  reduce using rule 69 (bitwise)
+    $default  reduce using rule 54 (relop)
 
 
 state 59
 
-   70 bitwise: RSHIFT .
+   56 relop: GT .
 
-    $default  reduce using rule 70 (bitwise)
+    $default  reduce using rule 56 (relop)
 
 
 state 60
 
-   65 bitwise: BAND .
+   55 relop: LTE .
 
-    $default  reduce using rule 65 (bitwise)
+    $default  reduce using rule 55 (relop)
 
 
 state 61
 
-   66 bitwise: BOR .
+   57 relop: GTE .
 
-    $default  reduce using rule 66 (bitwise)
+    $default  reduce using rule 57 (relop)
 
 
 state 62
 
-   67 bitwise: BXOR .
+   59 relop: DEQ .
 
-    $default  reduce using rule 67 (bitwise)
+    $default  reduce using rule 59 (relop)
 
 
 state 63
 
-   68 bitwise: BNOT .
+   58 relop: NE .
 
-    $default  reduce using rule 68 (bitwise)
+    $default  reduce using rule 58 (relop)
 
 
 state 64
 
-   27 E: E oper . E
+   70 identity: IS .
 
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    MINUS  shift, and go to state 4
-    "("    shift, and go to state 7
-
-    E  go to state 82
+    $default  reduce using rule 70 (identity)
 
 
 state 65
 
-   33 oper: arith .
+   71 identity: ISN .
 
-    $default  reduce using rule 33 (oper)
+    $default  reduce using rule 71 (identity)
 
 
 state 66
 
-   34 oper: relop .
+   72 membership: IN .
 
-    $default  reduce using rule 34 (oper)
+    $default  reduce using rule 72 (membership)
 
 
 state 67
 
-   35 oper: identity .
+   73 membership: NIN .
 
-    $default  reduce using rule 35 (oper)
+    $default  reduce using rule 73 (membership)
 
 
 state 68
 
-   36 oper: membership .
+   78 bitwise: LSHIFT .
 
-    $default  reduce using rule 36 (oper)
+    $default  reduce using rule 78 (bitwise)
 
 
 state 69
 
-   37 oper: bitwise .
+   79 bitwise: RSHIFT .
 
-    $default  reduce using rule 37 (oper)
+    $default  reduce using rule 79 (bitwise)
 
 
 state 70
 
-    7 S: id assign E .
-   27 E: E . oper E
+   74 bitwise: BAND .
 
-    PLUS    shift, and go to state 41
-    MINUS   shift, and go to state 42
-    MUL     shift, and go to state 43
-    DIV     shift, and go to state 44
-    MOD     shift, and go to state 45
-    EXP     shift, and go to state 46
-    FDIV    shift, and go to state 47
-    LT      shift, and go to state 48
-    GT      shift, and go to state 49
-    LTE     shift, and go to state 50
-    GTE     shift, and go to state 51
-    DEQ     shift, and go to state 52
-    NE      shift, and go to state 53
-    IS      shift, and go to state 54
-    ISN     shift, and go to state 55
-    IN      shift, and go to state 56
-    NIN     shift, and go to state 57
-    LSHIFT  shift, and go to state 58
-    RSHIFT  shift, and go to state 59
-    BAND    shift, and go to state 60
-    BOR     shift, and go to state 61
-    BXOR    shift, and go to state 62
-    BNOT    shift, and go to state 63
-
-    $default  reduce using rule 7 (S)
-
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
+    $default  reduce using rule 74 (bitwise)
 
 
 state 71
 
-   21 B: B . OR B
-   22  | B . AND B
-   23  | NOT B .
+   75 bitwise: BOR .
 
-    $default  reduce using rule 23 (B)
+    $default  reduce using rule 75 (bitwise)
 
 
 state 72
 
-   22 B: B AND . B
+   76 bitwise: BXOR .
 
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    NOT    shift, and go to state 27
-    MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
-
-    B  go to state 83
-    E  go to state 31
+    $default  reduce using rule 76 (bitwise)
 
 
 state 73
 
-   21 B: B OR . B
+   77 bitwise: BNOT .
 
-    id     shift, and go to state 25
-    FLOAT  shift, and go to state 2
-    INT    shift, and go to state 3
-    NOT    shift, and go to state 27
-    MINUS  shift, and go to state 4
-    TRUE   shift, and go to state 28
-    FALSE  shift, and go to state 29
-    "("    shift, and go to state 7
-
-    B  go to state 84
-    E  go to state 31
+    $default  reduce using rule 77 (bitwise)
 
 
 state 74
 
-   10 if_statement: IF B COLON . NL indent_statement
+   30 E: E oper . E
 
-    NL  shift, and go to state 85
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    E  go to state 96
 
 
 state 75
 
-   17 while_statement: WHILE B COLON . NL indent_statement
+   42 oper: arith .
 
-    NL  shift, and go to state 86
+    $default  reduce using rule 42 (oper)
 
 
 state 76
 
-   28 E: "(" E ")" .
+   43 oper: relop .
 
-    $default  reduce using rule 28 (E)
+    $default  reduce using rule 43 (oper)
 
 
 state 77
+
+   44 oper: identity .
+
+    $default  reduce using rule 44 (oper)
+
+
+state 78
+
+   45 oper: membership .
+
+    $default  reduce using rule 45 (oper)
+
+
+state 79
+
+   46 oper: bitwise .
+
+    $default  reduce using rule 46 (oper)
+
+
+state 80
+
+   10 S: id assign E .
+   30 E: E . oper E
+
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
+
+    $default  reduce using rule 10 (S)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
+
+
+state 81
+
+   24 B: B . OR B
+   25  | B . AND B
+   26  | NOT B .
+
+    $default  reduce using rule 26 (B)
+
+
+state 82
+
+   25 B: B AND . B
+
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    NOT    shift, and go to state 33
+    MINUS  shift, and go to state 4
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
+
+    B  go to state 97
+    E  go to state 37
+
+
+state 83
+
+   24 B: B OR . B
+
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    NOT    shift, and go to state 33
+    MINUS  shift, and go to state 4
+    TRUE   shift, and go to state 34
+    FALSE  shift, and go to state 35
+    "("    shift, and go to state 10
+
+    B  go to state 98
+    E  go to state 37
+
+
+state 84
+
+   13 if_statement: IF B COLON . NL indent_statement
+
+    NL  shift, and go to state 99
+
+
+state 85
+
+   20 while_statement: WHILE B COLON . NL indent_statement
+
+    NL  shift, and go to state 100
+
+
+state 86
+
+   39 ECOM: E COMMA . ECOM
+
+    id     shift, and go to state 31
+    FLOAT  shift, and go to state 2
+    INT    shift, and go to state 3
+    MINUS  shift, and go to state 4
+    "("    shift, and go to state 10
+
+    $default  reduce using rule 41 (ECOM)
+
+    E     go to state 39
+    ECOM  go to state 101
+
+
+state 87
+
+   36 LIST: LISTO ECOM LISTC .
+
+    $default  reduce using rule 36 (LIST)
+
+
+state 88
+
+   37 TUPLE: TUPLEO ECOM TUPLEC .
+
+    $default  reduce using rule 37 (TUPLE)
+
+
+state 89
+
+   38 SET: SETO ECOM SETC .
+
+    $default  reduce using rule 38 (SET)
+
+
+state 90
+
+   31 E: "(" E ")" .
+
+    $default  reduce using rule 31 (E)
+
+
+state 91
 
     3 P: S NL P .
 
     $default  reduce using rule 3 (P)
 
 
-state 78
+state 92
 
-   14 elif_statement: ELIF B . COLON NL indent_statement
-   21 B: B . OR B
-   22  | B . AND B
+   17 elif_statement: ELIF B . COLON NL indent_statement
+   24 B: B . OR B
+   25  | B . AND B
 
-    AND    shift, and go to state 72
-    OR     shift, and go to state 73
-    COLON  shift, and go to state 87
-
-
-state 79
-
-   11 else_elif: elif_statement else_statement .
-
-    $default  reduce using rule 11 (else_elif)
+    AND    shift, and go to state 82
+    OR     shift, and go to state 83
+    COLON  shift, and go to state 102
 
 
-state 80
+state 93
 
-   15 elif_statement: elif_statement . elif_statement
-   15               | elif_statement elif_statement .
+   14 else_elif: elif_statement else_statement .
 
-    ELIF  shift, and go to state 36
-
-    $end      reduce using rule 15 (elif_statement)
-    $end      [reduce using rule 16 (elif_statement)]
-    ELSE      reduce using rule 15 (elif_statement)
-    ELSE      [reduce using rule 16 (elif_statement)]
-    ELIF      [reduce using rule 15 (elif_statement)]
-    ELIF      [reduce using rule 16 (elif_statement)]
-    NL        reduce using rule 15 (elif_statement)
-    NL        [reduce using rule 16 (elif_statement)]
-    $default  reduce using rule 15 (elif_statement)
-
-    elif_statement  go to state 80
+    $default  reduce using rule 14 (else_elif)
 
 
-state 81
+state 94
 
-   12 else_statement: ELSE COLON . NL indent_statement
+   18 elif_statement: elif_statement . elif_statement
+   18               | elif_statement elif_statement .
 
-    NL  shift, and go to state 88
+    ELIF  shift, and go to state 46
 
+    $end      reduce using rule 18 (elif_statement)
+    $end      [reduce using rule 19 (elif_statement)]
+    ELSE      reduce using rule 18 (elif_statement)
+    ELSE      [reduce using rule 19 (elif_statement)]
+    ELIF      [reduce using rule 18 (elif_statement)]
+    ELIF      [reduce using rule 19 (elif_statement)]
+    NL        reduce using rule 18 (elif_statement)
+    NL        [reduce using rule 19 (elif_statement)]
+    $default  reduce using rule 18 (elif_statement)
 
-state 82
-
-   27 E: E . oper E
-   27  | E oper E .
-
-    PLUS    shift, and go to state 41
-    MINUS   shift, and go to state 42
-    MUL     shift, and go to state 43
-    DIV     shift, and go to state 44
-    MOD     shift, and go to state 45
-    EXP     shift, and go to state 46
-    FDIV    shift, and go to state 47
-    LT      shift, and go to state 48
-    GT      shift, and go to state 49
-    LTE     shift, and go to state 50
-    GTE     shift, and go to state 51
-    DEQ     shift, and go to state 52
-    NE      shift, and go to state 53
-    IS      shift, and go to state 54
-    ISN     shift, and go to state 55
-    IN      shift, and go to state 56
-    NIN     shift, and go to state 57
-    LSHIFT  shift, and go to state 58
-    RSHIFT  shift, and go to state 59
-    BAND    shift, and go to state 60
-    BOR     shift, and go to state 61
-    BXOR    shift, and go to state 62
-    BNOT    shift, and go to state 63
-
-    PLUS      [reduce using rule 27 (E)]
-    MINUS     [reduce using rule 27 (E)]
-    MUL       [reduce using rule 27 (E)]
-    DIV       [reduce using rule 27 (E)]
-    MOD       [reduce using rule 27 (E)]
-    EXP       [reduce using rule 27 (E)]
-    FDIV      [reduce using rule 27 (E)]
-    LT        [reduce using rule 27 (E)]
-    GT        [reduce using rule 27 (E)]
-    LTE       [reduce using rule 27 (E)]
-    GTE       [reduce using rule 27 (E)]
-    DEQ       [reduce using rule 27 (E)]
-    NE        [reduce using rule 27 (E)]
-    IS        [reduce using rule 27 (E)]
-    ISN       [reduce using rule 27 (E)]
-    IN        [reduce using rule 27 (E)]
-    NIN       [reduce using rule 27 (E)]
-    LSHIFT    [reduce using rule 27 (E)]
-    RSHIFT    [reduce using rule 27 (E)]
-    BAND      [reduce using rule 27 (E)]
-    BOR       [reduce using rule 27 (E)]
-    BXOR      [reduce using rule 27 (E)]
-    BNOT      [reduce using rule 27 (E)]
-    $default  reduce using rule 27 (E)
-
-    oper        go to state 64
-    arith       go to state 65
-    relop       go to state 66
-    identity    go to state 67
-    membership  go to state 68
-    bitwise     go to state 69
+    elif_statement  go to state 94
 
 
-state 83
+state 95
 
-   21 B: B . OR B
-   22  | B . AND B
-   22  | B AND B .
+   15 else_statement: ELSE COLON . NL indent_statement
 
-    $default  reduce using rule 22 (B)
+    NL  shift, and go to state 103
 
 
-state 84
+state 96
 
-   21 B: B . OR B
-   21  | B OR B .
-   22  | B . AND B
+   30 E: E . oper E
+   30  | E oper E .
 
-    AND  shift, and go to state 72
+    PLUS    shift, and go to state 51
+    MINUS   shift, and go to state 52
+    MUL     shift, and go to state 53
+    DIV     shift, and go to state 54
+    MOD     shift, and go to state 55
+    EXP     shift, and go to state 56
+    FDIV    shift, and go to state 57
+    LT      shift, and go to state 58
+    GT      shift, and go to state 59
+    LTE     shift, and go to state 60
+    GTE     shift, and go to state 61
+    DEQ     shift, and go to state 62
+    NE      shift, and go to state 63
+    IS      shift, and go to state 64
+    ISN     shift, and go to state 65
+    IN      shift, and go to state 66
+    NIN     shift, and go to state 67
+    LSHIFT  shift, and go to state 68
+    RSHIFT  shift, and go to state 69
+    BAND    shift, and go to state 70
+    BOR     shift, and go to state 71
+    BXOR    shift, and go to state 72
+    BNOT    shift, and go to state 73
 
-    $default  reduce using rule 21 (B)
+    PLUS      [reduce using rule 30 (E)]
+    MINUS     [reduce using rule 30 (E)]
+    MUL       [reduce using rule 30 (E)]
+    DIV       [reduce using rule 30 (E)]
+    MOD       [reduce using rule 30 (E)]
+    EXP       [reduce using rule 30 (E)]
+    FDIV      [reduce using rule 30 (E)]
+    LT        [reduce using rule 30 (E)]
+    GT        [reduce using rule 30 (E)]
+    LTE       [reduce using rule 30 (E)]
+    GTE       [reduce using rule 30 (E)]
+    DEQ       [reduce using rule 30 (E)]
+    NE        [reduce using rule 30 (E)]
+    IS        [reduce using rule 30 (E)]
+    ISN       [reduce using rule 30 (E)]
+    IN        [reduce using rule 30 (E)]
+    NIN       [reduce using rule 30 (E)]
+    LSHIFT    [reduce using rule 30 (E)]
+    RSHIFT    [reduce using rule 30 (E)]
+    BAND      [reduce using rule 30 (E)]
+    BOR       [reduce using rule 30 (E)]
+    BXOR      [reduce using rule 30 (E)]
+    BNOT      [reduce using rule 30 (E)]
+    $default  reduce using rule 30 (E)
+
+    oper        go to state 74
+    arith       go to state 75
+    relop       go to state 76
+    identity    go to state 77
+    membership  go to state 78
+    bitwise     go to state 79
 
 
-state 85
+state 97
 
-   10 if_statement: IF B COLON NL . indent_statement
+   24 B: B . OR B
+   25  | B . AND B
+   25  | B AND B .
 
-    SPACE  shift, and go to state 89
-
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 20 (indent_statement)
-
-    indent_statement  go to state 90
+    $default  reduce using rule 25 (B)
 
 
-state 86
+state 98
 
-   17 while_statement: WHILE B COLON NL . indent_statement
+   24 B: B . OR B
+   24  | B OR B .
+   25  | B . AND B
 
-    SPACE  shift, and go to state 89
+    AND  shift, and go to state 82
 
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 20 (indent_statement)
-
-    indent_statement  go to state 91
-
-
-state 87
-
-   14 elif_statement: ELIF B COLON . NL indent_statement
-
-    NL  shift, and go to state 92
+    $default  reduce using rule 24 (B)
 
 
-state 88
+state 99
 
-   12 else_statement: ELSE COLON NL . indent_statement
+   13 if_statement: IF B COLON NL . indent_statement
 
-    SPACE  shift, and go to state 89
+    SPACE  shift, and go to state 104
 
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 20 (indent_statement)
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 23 (indent_statement)
 
-    indent_statement  go to state 93
+    indent_statement  go to state 105
 
 
-state 89
+state 100
 
-   18 indent_statement: SPACE . S NL
+   20 while_statement: WHILE B COLON NL . indent_statement
+
+    SPACE  shift, and go to state 104
+
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 23 (indent_statement)
+
+    indent_statement  go to state 106
+
+
+state 101
+
+   39 ECOM: E COMMA ECOM .
+
+    $default  reduce using rule 39 (ECOM)
+
+
+state 102
+
+   17 elif_statement: ELIF B COLON . NL indent_statement
+
+    NL  shift, and go to state 107
+
+
+state 103
+
+   15 else_statement: ELSE COLON NL . indent_statement
+
+    SPACE  shift, and go to state 104
+
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 23 (indent_statement)
+
+    indent_statement  go to state 108
+
+
+state 104
+
+   21 indent_statement: SPACE . S NL
 
     id     shift, and go to state 1
     FLOAT  shift, and go to state 2
@@ -1265,137 +1472,137 @@ state 89
     MINUS  shift, and go to state 4
     IF     shift, and go to state 5
     WHILE  shift, and go to state 6
-    "("    shift, and go to state 7
+    "("    shift, and go to state 10
 
-    $default  reduce using rule 9 (S)
+    $default  reduce using rule 12 (S)
 
-    S                go to state 94
-    if_statement     go to state 11
-    while_statement  go to state 12
-    E                go to state 13
-
-
-state 90
-
-   10 if_statement: IF B COLON NL indent_statement .
-   19 indent_statement: indent_statement . indent_statement
-
-    SPACE  shift, and go to state 89
-
-    $end      reduce using rule 10 (if_statement)
-    $end      [reduce using rule 20 (indent_statement)]
-    ELSE      reduce using rule 10 (if_statement)
-    ELSE      [reduce using rule 20 (indent_statement)]
-    ELIF      reduce using rule 10 (if_statement)
-    ELIF      [reduce using rule 20 (indent_statement)]
-    NL        reduce using rule 10 (if_statement)
-    NL        [reduce using rule 20 (indent_statement)]
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 10 (if_statement)
-
-    indent_statement  go to state 95
+    S                go to state 109
+    if_statement     go to state 14
+    while_statement  go to state 15
+    E                go to state 16
 
 
-state 91
+state 105
 
-   17 while_statement: WHILE B COLON NL indent_statement .
-   19 indent_statement: indent_statement . indent_statement
+   13 if_statement: IF B COLON NL indent_statement .
+   22 indent_statement: indent_statement . indent_statement
 
-    SPACE  shift, and go to state 89
+    SPACE  shift, and go to state 104
 
-    $end      reduce using rule 17 (while_statement)
-    $end      [reduce using rule 20 (indent_statement)]
-    ELSE      reduce using rule 17 (while_statement)
-    ELSE      [reduce using rule 20 (indent_statement)]
-    NL        reduce using rule 17 (while_statement)
-    NL        [reduce using rule 20 (indent_statement)]
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 17 (while_statement)
+    $end      reduce using rule 13 (if_statement)
+    $end      [reduce using rule 23 (indent_statement)]
+    ELSE      reduce using rule 13 (if_statement)
+    ELSE      [reduce using rule 23 (indent_statement)]
+    ELIF      reduce using rule 13 (if_statement)
+    ELIF      [reduce using rule 23 (indent_statement)]
+    NL        reduce using rule 13 (if_statement)
+    NL        [reduce using rule 23 (indent_statement)]
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 13 (if_statement)
 
-    indent_statement  go to state 95
-
-
-state 92
-
-   14 elif_statement: ELIF B COLON NL . indent_statement
-
-    SPACE  shift, and go to state 89
-
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 20 (indent_statement)
-
-    indent_statement  go to state 96
+    indent_statement  go to state 110
 
 
-state 93
+state 106
 
-   12 else_statement: ELSE COLON NL indent_statement .
-   19 indent_statement: indent_statement . indent_statement
+   20 while_statement: WHILE B COLON NL indent_statement .
+   22 indent_statement: indent_statement . indent_statement
 
-    SPACE  shift, and go to state 89
+    SPACE  shift, and go to state 104
 
-    $end      reduce using rule 12 (else_statement)
-    $end      [reduce using rule 20 (indent_statement)]
-    NL        reduce using rule 12 (else_statement)
-    NL        [reduce using rule 20 (indent_statement)]
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 12 (else_statement)
+    $end      reduce using rule 20 (while_statement)
+    $end      [reduce using rule 23 (indent_statement)]
+    ELSE      reduce using rule 20 (while_statement)
+    ELSE      [reduce using rule 23 (indent_statement)]
+    NL        reduce using rule 20 (while_statement)
+    NL        [reduce using rule 23 (indent_statement)]
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 20 (while_statement)
 
-    indent_statement  go to state 95
-
-
-state 94
-
-   18 indent_statement: SPACE S . NL
-
-    NL  shift, and go to state 97
+    indent_statement  go to state 110
 
 
-state 95
+state 107
 
-   19 indent_statement: indent_statement . indent_statement
-   19                 | indent_statement indent_statement .
+   17 elif_statement: ELIF B COLON NL . indent_statement
 
-    SPACE  shift, and go to state 89
+    SPACE  shift, and go to state 104
 
-    $end      reduce using rule 19 (indent_statement)
-    $end      [reduce using rule 20 (indent_statement)]
-    ELSE      reduce using rule 19 (indent_statement)
-    ELSE      [reduce using rule 20 (indent_statement)]
-    ELIF      reduce using rule 19 (indent_statement)
-    ELIF      [reduce using rule 20 (indent_statement)]
-    NL        reduce using rule 19 (indent_statement)
-    NL        [reduce using rule 20 (indent_statement)]
-    SPACE     [reduce using rule 19 (indent_statement)]
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 19 (indent_statement)
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 23 (indent_statement)
 
-    indent_statement  go to state 95
+    indent_statement  go to state 111
 
 
-state 96
+state 108
 
-   14 elif_statement: ELIF B COLON NL indent_statement .
-   19 indent_statement: indent_statement . indent_statement
+   15 else_statement: ELSE COLON NL indent_statement .
+   22 indent_statement: indent_statement . indent_statement
 
-    SPACE  shift, and go to state 89
+    SPACE  shift, and go to state 104
 
-    $end      reduce using rule 14 (elif_statement)
-    $end      [reduce using rule 20 (indent_statement)]
-    ELSE      reduce using rule 14 (elif_statement)
-    ELSE      [reduce using rule 20 (indent_statement)]
-    ELIF      reduce using rule 14 (elif_statement)
-    ELIF      [reduce using rule 20 (indent_statement)]
-    NL        reduce using rule 14 (elif_statement)
-    NL        [reduce using rule 20 (indent_statement)]
-    SPACE     [reduce using rule 20 (indent_statement)]
-    $default  reduce using rule 14 (elif_statement)
+    $end      reduce using rule 15 (else_statement)
+    $end      [reduce using rule 23 (indent_statement)]
+    NL        reduce using rule 15 (else_statement)
+    NL        [reduce using rule 23 (indent_statement)]
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 15 (else_statement)
 
-    indent_statement  go to state 95
+    indent_statement  go to state 110
 
 
-state 97
+state 109
 
-   18 indent_statement: SPACE S NL .
+   21 indent_statement: SPACE S . NL
 
-    $default  reduce using rule 18 (indent_statement)
+    NL  shift, and go to state 112
+
+
+state 110
+
+   22 indent_statement: indent_statement . indent_statement
+   22                 | indent_statement indent_statement .
+
+    SPACE  shift, and go to state 104
+
+    $end      reduce using rule 22 (indent_statement)
+    $end      [reduce using rule 23 (indent_statement)]
+    ELSE      reduce using rule 22 (indent_statement)
+    ELSE      [reduce using rule 23 (indent_statement)]
+    ELIF      reduce using rule 22 (indent_statement)
+    ELIF      [reduce using rule 23 (indent_statement)]
+    NL        reduce using rule 22 (indent_statement)
+    NL        [reduce using rule 23 (indent_statement)]
+    SPACE     [reduce using rule 22 (indent_statement)]
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 22 (indent_statement)
+
+    indent_statement  go to state 110
+
+
+state 111
+
+   17 elif_statement: ELIF B COLON NL indent_statement .
+   22 indent_statement: indent_statement . indent_statement
+
+    SPACE  shift, and go to state 104
+
+    $end      reduce using rule 17 (elif_statement)
+    $end      [reduce using rule 23 (indent_statement)]
+    ELSE      reduce using rule 17 (elif_statement)
+    ELSE      [reduce using rule 23 (indent_statement)]
+    ELIF      reduce using rule 17 (elif_statement)
+    ELIF      [reduce using rule 23 (indent_statement)]
+    NL        reduce using rule 17 (elif_statement)
+    NL        [reduce using rule 23 (indent_statement)]
+    SPACE     [reduce using rule 23 (indent_statement)]
+    $default  reduce using rule 17 (elif_statement)
+
+    indent_statement  go to state 110
+
+
+state 112
+
+   21 indent_statement: SPACE S NL .
+
+    $default  reduce using rule 21 (indent_statement)

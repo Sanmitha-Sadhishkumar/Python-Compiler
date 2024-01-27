@@ -20,17 +20,16 @@ int i=0;
     char *op;
     char *key;
     char *delim;
-    char *coll[100];
 }
 
-%type <Sy> E S B P G if_statement else_elif elif_statement else_statement while_statement indent_statement
+%type <Sy> E S B P G ECOM if_statement else_elif elif_statement else_statement while_statement indent_statement
 %type <op> arith relop identity assign membership bitwise oper
 %token <lexeme> id ID 
 %token <value> LITERAL FLOAT INT
 %token <op> AND OR NOT PLUS MINUS MUL DIV MOD EXP FDIV LT GT LTE GTE DEQ NE EQ AEQ SEQ MEQ DIEQ FDEQ EEQ MOEQ BLEQ BREQ IS ISN IN NIN LSHIFT RSHIFT BAND BOR BXOR BNOT
 %token <key> IF ELSE ELIF WHILE FOR TRUE FALSE
-%token <delim> DELIMITER COLON TAB NL SPACE
-%token <coll> LIST SET TUPLE DICT
+%token <delim> DELIMITER COLON TAB NL SPACE COMMA LISTO LISTC TUPLEO TUPLEC SETO SETC
+%type <Sy> LIST SET TUPLE
 
 %left ELSE ELIF WHILE FOR TRUE FALSE
 %right EQ AEQ SEQ MEQ DIEQ FDEQ EEQ MOEQ BLEQ BREQ
@@ -50,10 +49,13 @@ int i=0;
 %left EXP
 
 %%
-G : P { $$ = $1; printNode($$); gen3addr($$);  printSyntaxTree($$);};
+G : P { $$ = $1; gen3addr($$);  printSyntaxTree($$);};
 
 P : S {$$ = $1; }
   | S NL P {$$ = newStJoinNode($1, $3);}
+  | LIST 
+  | TUPLE
+  | SET 
   | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 S : if_statement else_elif { $$ = newElseNode($1, $2);}
@@ -98,6 +100,23 @@ E : E oper E { $$ = newOpNode($2, $1, $3); addTriple($2, $1, $3); addQuadruple($
   | INT { $$ = newLiteralNode($1,1);}
   | FLOAT { $$ = newLiteralNode($1,2);}
   ;
+
+LIST : LISTO ECOM LISTC {$$ = newCollectionNode($2, 1);  printNode($$);}
+     ;
+
+TUPLE : TUPLEO ECOM TUPLEC {$$ = newCollectionNode($2, 2);  printNode($$);}
+     ;
+
+SET : SETO ECOM SETC {$$ = newCollectionNode($2, 3);  printNode($$);}
+     ;
+/*
+DICT : SETO E COLON E COMMA DICT SETC {printNode($2);}
+     | SETO E COLON E SETC         {printNode($2);}
+     ;
+*/
+ECOM : E COMMA ECOM {$$ = newEcomNode($1, $3);}
+     | E {$$=$1;}
+     | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 oper : arith {$$ = $1;}
      | relop {$$ = $1;}

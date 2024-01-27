@@ -83,19 +83,19 @@ dict \{(.+:.+,?)*\}
 {str}       {int a = installLit(yytext,"STR"); yylval.value = strdup(yytext); return LITERAL;}
 {FLOAT}     {int a = installLit(yytext,"FLOAT"); yylval.value = strdup(yytext); return FLOAT;}
 
-{list}      {int a = installID(yytext, "LIST"); yylval.lexeme = strdup(yytext); return LIST; }
-{tuple}     {int a = installID(yytext, "TUPLE"); yylval.lexeme = strdup(yytext); return TUPLE; }
-{set}       {int a = installID(yytext, "SET"); yylval.lexeme = strdup(yytext); return SET; }
-{dict}      {int a = installID(yytext, "DICT"); yylval.lexeme = strdup(yytext); return DICT; }
-
 {id}        {int a = installID(yytext, "ID"); yylval.lexeme = strdup(yytext); return id; }
 
 ":"         {yylval.delim = strdup(yytext); return COLON;}
 "\t"        {yylval.delim = strdup(yytext); return SPACE;}
 "    "      {yylval.delim = strdup(yytext); return SPACE;}
 "\n"        {yylval.delim = strdup(yytext); return NL;}
-"("         {yylval.delim = strdup(yytext); return "(";}
-")"         {yylval.delim = strdup(yytext); return ")";}
+"("         {yylval.delim = strdup(yytext); return TUPLEO;}
+")"         {yylval.delim = strdup(yytext); return TUPLEC;}
+"["         {yylval.delim = strdup(yytext); return LISTO;}
+"]"         {yylval.delim = strdup(yytext); return LISTC;}
+"{"         {yylval.delim = strdup(yytext); return SETO;}
+"}"         {yylval.delim = strdup(yytext); return SETC;}
+","         {yylval.delim = strdup(yytext); return COMMA;}
 
 <<EOF>>     {saveST(); return 0;}
 

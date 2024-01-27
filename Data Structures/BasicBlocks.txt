@@ -9,39 +9,39 @@ t7=b+c
 aa=t7
 
 B1: 
-if b : goto (11)
+if b : goto B3
 
 B2: 
-goto (15)
+goto B6
 
 B3: 
-if c : goto (13)
+if c : goto B5
 
 B4: 
-goto (15)
+goto B6
 
 B5: 
 kkk=0
-goto (9)
+goto B1
 
 B6: 
 b=0
-if a : goto (18)
+if a : goto B8
 
 B7: 
-goto (24)
+goto B11
 
 B8: 
-if b : goto (20)
+if b : goto B10
 
 B9: 
-goto (24)
+goto B11
 
 B10: 
 t11=c*d
 t12=b+t11
 f=t12
-goto (25)
+goto B12
 
 B11: 
 f=0

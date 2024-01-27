@@ -13,6 +13,8 @@ int LabeltoIndex(char* s);
 
 int* RemoveDupandSort();
 
+int NumIndex(int *uniqueArr, int data);
+
 char** BasicBlocks(int* uniqueArr);
 
 void printBlocks(char **blocks);

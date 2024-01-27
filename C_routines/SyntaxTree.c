@@ -35,6 +35,69 @@ SyntaxTree* newLiteralNode(char* value, int type){
     node->l = node->r = NULL;
     node->True= node->False= NULL;
     node->code="";
+    node->valuen=0;
+    node->coll[0]='\0';
+    return node;
+}
+
+SyntaxTree* newCollectionNode(SyntaxTree*l, int type){
+    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+    int i;
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    switch (type){
+        case 1:
+            node->nodetype = LIST_NODE;
+            break;
+        case 2:
+            node->nodetype = TUPLE_NODE;
+            break;
+        case 3:
+            node->nodetype = SET_NODE;
+            break;
+        case 4:
+            node->nodetype = DICT_NODE;
+            break;
+    }
+    node->l = node->r = NULL;
+    node->True= node->False= NULL;
+    node->code="";
+    for(i=0; i<l->valuen;i++){
+        node->coll[node->valuen]=(char*)malloc(strlen(l->coll[i])+1);
+        sprintf(node->coll[node->valuen++],"%s", strdup(l->coll[i]));
+    }
+    return node;
+}
+
+SyntaxTree* newEcomNode(SyntaxTree*l, SyntaxTree* r){
+    SyntaxTree *node = malloc(sizeof(SyntaxTree));
+    if(!node) {
+        fprintf(stderr, "Out of space\n");
+        exit(1);
+    }
+    node->valuen = 0;
+    node->nodetype = ECOM_NODE;
+    int L = l->valuen;
+    int R = r->valuen, i=0;
+    node->coll[node->valuen]=(char*)malloc(strlen(l->addr)+1);
+    sprintf(node->coll[node->valuen++], "%s", strdup(l->addr));
+    if ((L!=0)){
+        for(i=0; i<L;i++){
+            node->coll[node->valuen]=(char*)malloc(strlen(l->coll[i])+1);
+            strcpy(node->coll[node->valuen++], l->coll[i]);
+        }
+    } if ((R!=0)) {
+        for(i=0; i<R;i++){
+            node->coll[node->valuen]=(char*)malloc(strlen(r->coll[i])+1);
+            strcpy(node->coll[node->valuen++], r->coll[i]);
+        }
+    }
+    if(r->nodetype!=ECOM_NODE){
+    node->coll[node->valuen]=(char*)malloc(strlen(r->addr)+1);
+    strcpy(node->coll[node->valuen++], r->addr);
+    }
     return node;
 }
 
@@ -102,7 +165,8 @@ SyntaxTree * newOpNode(char *op, SyntaxTree *l, SyntaxTree *r){
     node->value.op = strdup(op);
     node->l = l;
     node->r = r;
-    
+    node->valuen=0;
+    node->coll[0]='\0';
     node->True = malloc(10);
     node->False = malloc(10);
     node->True= node->False= NULL;
@@ -380,10 +444,14 @@ void printSyntaxTree(SyntaxTree *head) {
 }
 
 void printNode(SyntaxTree* a){
-    printf("\nNodetype : %d",a->nodetype);
+    int i;
+    printf("\nNodetype : %d\n",a->nodetype);
     //printf("\nAddr : %s",a->addr);
-    printf("\ncode : %s",a->code);
+    //printf("\ncode : %s",a->code);
     //printf("\nnext : %s",a->next);
-    printf("\ntrue : %s",a->True);
-    printf("\nfalse : %s\n\n",a->False);
+    //printf("\ntrue : %s",a->True);
+    //printf("\nfalse : %s\n\n",a->False);
+    for(i=0; i<a->valuen;i++){
+        printf("%s ", a->coll[i]);
+    }
 }

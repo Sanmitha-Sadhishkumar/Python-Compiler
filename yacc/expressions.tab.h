@@ -92,10 +92,13 @@
      TAB = 308,
      NL = 309,
      SPACE = 310,
-     LIST = 311,
-     SET = 312,
-     TUPLE = 313,
-     DICT = 314
+     COMMA = 311,
+     LISTO = 312,
+     LISTC = 313,
+     TUPLEO = 314,
+     TUPLEC = 315,
+     SETO = 316,
+     SETC = 317
    };
 #endif
 
@@ -116,12 +119,11 @@ typedef union YYSTYPE
     char *op;
     char *key;
     char *delim;
-    char *coll[100];
 
 
 
 /* Line 1676 of yacc.c  */
-#line 125 "expressions.tab.h"
+#line 127 "expressions.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

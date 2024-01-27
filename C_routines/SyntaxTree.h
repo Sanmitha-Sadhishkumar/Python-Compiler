@@ -10,8 +10,9 @@ typedef struct SyntaxTree {
         char *doubleval;
         char *strval;
         char *op;
-        char *value[100];
     } value;
+    int valuen;
+    char *coll[100];
     char *addr;
     char *True;
     char *False;
@@ -48,6 +49,10 @@ SyntaxTree* newStJoinNode(SyntaxTree*l, SyntaxTree*r);
 
 SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
 
+SyntaxTree* newEcomNode(SyntaxTree*l, SyntaxTree* r);
+
+SyntaxTree* newCollectionNode(SyntaxTree*l, int type);
+
 
 #define ID_NODE 101
 #define INT_NODE 102
@@ -66,3 +71,8 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r);
 #define ELIF_NODE 115
 #define WHILE_NODE 116
 #define STR_NODE 117
+#define ECOM_NODE 118
+#define LIST_NODE 119
+#define TUPLE_NODE 120
+#define SET_NODE 121
+#define DICT_NODE 122

@@ -112,12 +112,22 @@ int* RemoveDupandSort(){
     return uniqueArr;
 }
 
+int NumIndex(int *uniqueArr, int data){
+    int i;
+    for(i=0;i<b;i++)
+        if(data==uniqueArr[i])
+            return i+1;
+    return -1;
+}
+
 char** BasicBlocks(int* uniqueArr){
     int i=0, j=0, b1=0;
     char** blocks = malloc(b * sizeof(char*));
     blocks[0] = (char*)malloc(1000 * sizeof(char));
     blocks[b1][0]='\0';
     li=0;
+    int index, num=-1;
+    char string1[256];
     splitLines("../Data Structures/3AddrcodewithoutLabel.txt");
     for(i=0;i<li;i++){
         int bnum = uniqueArr[j];
@@ -127,10 +137,15 @@ char** BasicBlocks(int* uniqueArr){
             blocks[++b1] = (char*)malloc(1000 * sizeof(char));
             blocks[b1][0]='\0';
             j++;
-            sprintf(blocks[b1], "%s%s", blocks[b1], lines[i]);
-        } else {
-            sprintf(blocks[b1], "%s%s", blocks[b1], lines[i]);
         }
+        if (sscanf(lines[i], "%s (%d)", string1, &index)==2){
+            num = NumIndex(uniqueArr, index);
+            sprintf(blocks[b1], "%s%s B%d\n", blocks[b1], string1, num);
+        } else if (sscanf(lines[i], "if %s : goto (%d)", string1, &index)==2){
+            num = NumIndex(uniqueArr, index);
+            sprintf(blocks[b1], "%sif %s : goto B%d\n", blocks[b1], string1, num);
+        } else 
+            sprintf(blocks[b1], "%s%s", blocks[b1], lines[i]);
     }
     return blocks;
 }
