@@ -27,8 +27,9 @@ void splitLines(char *filename) {
 
 int LabeltoIndex(char* s){
     int i;
+    sprintf(s, "%s : ", s);
     for(i=0; i<li; i++){
-        if(strncmp(s, lines[i], strlen(s))==0){
+        if(strstr(lines[i], s)){
             return i+1;
         }
     }
@@ -37,42 +38,49 @@ int LabeltoIndex(char* s){
 
 void Convert() {
     char code[1000] = "";
+    int check=0;
     const char *delimiter = "\n";
-    int lineNumber;
+    int lineNumber1, lineNumber2;
     char string1[100];
     char string2[100];
     int i;
 
     for (i = 0; i < li; i++) {
-        if (sscanf(lines[i], "L%d : %[^\n]", &lineNumber, string1) == 2) {
+        check=0;
+        strcpy(string1, strdup(lines[i]));
+        while (sscanf(string1, "L%d : %[^\n]", &lineNumber1, string1) == 2) {
             if (string1 != NULL) {
-                if (sscanf(string1, "if %s : goto L%d", string2, &lineNumber) == 2){
+                check=1;
+                if (sscanf(string1, "if %s : goto L%d", string2, &lineNumber2) == 2){
                     char buf[10];
-                    sprintf(buf, "L%d", lineNumber);
+                    sprintf(buf, "L%d", lineNumber2);
                     int index = LabeltoIndex(buf);
                     block_num[b++]=index;
                     block_num[b++]=i+2;
                     sprintf(code, "%sif %s : goto (%d)\n", code, string2, index);
                 } else {
+                    char s[100];
+                    if(sscanf(string1, "L%d : %[^\n]", &lineNumber1, s) != 2){
                     strcat(code, string1);
                     strcat(code, "\n");
+                    }
                 }
             }
-        } else if ((sscanf(lines[i], "%s L%d", string1, &lineNumber) == 2)){
+        } if ((sscanf(lines[i], "%s L%d", string1, &lineNumber1) == 2)){
             char buf[10];
-            sprintf(buf, "L%d", lineNumber);
+            sprintf(buf, "L%d", lineNumber1);
             int index = LabeltoIndex(buf);
             sprintf(code, "%s%s (%d)\n", code, string1, index);
             block_num[b++]=index;
             block_num[b++]=i+2;
-        } else if (sscanf(lines[i], "if %s : goto L%d", string1, &lineNumber) == 2){
+        } else if (sscanf(lines[i], "if %s : goto L%d", string1, &lineNumber1) == 2){
             char buf[10];
-            sprintf(buf, "L%d", lineNumber);
+            sprintf(buf, "L%d", lineNumber1);
             int index = LabeltoIndex(buf);
             sprintf(code, "%sif %s : goto (%d)\n", code, string1, index);
             block_num[b++]=index;
             block_num[b++]=i+2;
-        } else {
+        } else if (check==0){
             if (string1 != NULL) {
                 strcat(code, lines[i]);
             }
@@ -159,14 +167,4 @@ void printBlocks(char **blocks){
         fprintf(file, "%s: \n%s\n", B, blocks[i]);
     }
     fclose(file);
-}
-
-int main(){
-    int i=0;
-    splitLines("../Data Structures/3Addrcode.txt");
-    Convert();
-    int* uniqueArr = RemoveDupandSort();
-    char **blocks = BasicBlocks(uniqueArr);
-    printBlocks(blocks);
-    return 1;
 }

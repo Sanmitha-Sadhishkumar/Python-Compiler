@@ -241,7 +241,7 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
             if((node->l->nodetype==LOG_NODE)){
                 sprintf(lcode, "%s\n%s : ", strdup(node->l->code), node->l->True);
             } else {
-                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s: ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->True);
+                sprintf(lcode, "%sif %s : goto %s\ngoto %s\n%s : ", node->l->code, node->l->addr, node->l->True, node->l->False, node->l->True);
             }
             if((node->r->nodetype==LOG_NODE)){
                 sprintf(rcode, "%s\n%s : ", strdup(node->r->code), node->r->False);
@@ -250,7 +250,7 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
            }
 
         } else if (strcmp(node->value.op, "not") == 0) {
-            sprintf(code, "%sif not %s: goto %s\n", node->l->code, node->l->addr, node->True);
+            sprintf(code, "%sif not %s : goto %s\n", node->l->code, node->l->addr, node->True);
         }
         sprintf(code, "%s %s", strdup(lcode),  strdup(rcode));
         node->code = strdup(code);
@@ -361,7 +361,7 @@ SyntaxTree* newWhileNode(char *op, SyntaxTree*l, SyntaxTree*r){
     sprintf(node->False, "%s", l->False);
     sprintf(r->next, "L%d", label++);
     sprintf(node->next, "L%d", label++);
-    sprintf(code, "%s : %s\n%s :%sgoto %s\n%s : ", r->next, strdup(l->code), l->True, strdup(r->code), r->next, l->False);
+    sprintf(code, "%s : %s\n%s : %sgoto %s\n%s : ", r->next, strdup(l->code), l->True, strdup(r->code), r->next, l->False);
     node->code = strdup(code);
     return node;
 }

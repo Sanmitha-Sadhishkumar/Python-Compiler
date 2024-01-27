@@ -1,51 +1,41 @@
 B0: 
-t1=d**t
-t2=h-t1
-t3=b//t2
-t4=0**t3
-h=t4
+h=0
 k=0
-t7=b+c
-aa=t7
+t3=b+c
+aa=t3
+if a : goto B2
 
 B1: 
-if b : goto B3
+goto B5
 
 B2: 
-goto B6
+if b : goto B4
 
 B3: 
-if c : goto B5
+goto B5
 
 B4: 
-goto B6
+t5=c*d
+t6=b+t5
+f=t6
 
 B5: 
-kkk=0
-goto B1
+if b : goto B7
 
 B6: 
-b=0
-if a : goto B8
+goto B10
 
 B7: 
-goto B11
+if c : goto B9
 
 B8: 
-if b : goto B10
+goto B10
 
 B9: 
-goto B11
+kkk=0
+goto B5
 
 B10: 
-t11=c*d
-t12=b+t11
-f=t12
-goto B12
-
-B11: 
-f=0
-
-B12: 
 aa=0
+bbbbb=0
 

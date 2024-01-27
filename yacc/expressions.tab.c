@@ -74,6 +74,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "../C_routines/3AddrCode.h"
+#include "../C_routines/CodeOptim.h"
 
 #define YYERROR_VERBOSE 1
 extern int yylineno;
@@ -83,7 +84,7 @@ int i=0;
 
 
 /* Line 189 of yacc.c  */
-#line 87 "expressions.tab.c"
+#line 88 "expressions.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -180,7 +181,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 14 "expressions.y"
+#line 15 "expressions.y"
 
     char *lexeme;
     char *value;
@@ -194,7 +195,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 198 "expressions.tab.c"
+#line 199 "expressions.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -206,7 +207,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 210 "expressions.tab.c"
+#line 211 "expressions.tab.c"
 
 #ifdef short
 # undef short
@@ -520,15 +521,15 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    54,    55,    56,    57,    58,    59,    61,
-      62,    63,    68,    69,    71,    73,    75,    76,    78,    79,
-      80,    82,    84,    85,    86,    88,    89,    90,    91,    92,
-      93,    96,    97,    98,    99,   100,   101,   104,   107,   110,
-     117,   118,   119,   121,   122,   123,   124,   125,   128,   129,
-     130,   131,   132,   133,   134,   137,   138,   139,   140,   141,
-     142,   145,   146,   147,   148,   149,   150,   151,   152,   153,
-     154,   157,   158,   161,   162,   165,   166,   167,   168,   169,
-     170
+       0,    53,    53,    55,    56,    57,    58,    59,    60,    62,
+      63,    64,    69,    70,    72,    74,    76,    77,    79,    80,
+      81,    83,    85,    86,    87,    89,    90,    91,    92,    93,
+      94,    97,    98,    99,   100,   101,   102,   105,   107,   109,
+     115,   116,   117,   119,   120,   121,   122,   123,   126,   127,
+     128,   129,   130,   131,   132,   135,   136,   137,   138,   139,
+     140,   143,   144,   145,   146,   147,   148,   149,   150,   151,
+     152,   155,   156,   159,   160,   163,   164,   165,   166,   167,
+     168
 };
 #endif
 
@@ -1534,49 +1535,70 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 52 "expressions.y"
+#line 53 "expressions.y"
     { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); gen3addr((yyval.Sy));  printSyntaxTree((yyval.Sy));;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 54 "expressions.y"
-    {(yyval.Sy) = (yyvsp[(1) - (1)].Sy); ;}
+#line 55 "expressions.y"
+    {(yyval.Sy) = (yyvsp[(1) - (1)].Sy);;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 55 "expressions.y"
+#line 56 "expressions.y"
     {(yyval.Sy) = newStJoinNode((yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 57 "expressions.y"
+    {(yyval.Sy) = (yyvsp[(1) - (1)].Sy);;}
+    break;
+
+  case 6:
+
+/* Line 1455 of yacc.c  */
+#line 58 "expressions.y"
+    {(yyval.Sy) = (yyvsp[(1) - (1)].Sy);;}
+    break;
+
+  case 7:
+
+/* Line 1455 of yacc.c  */
+#line 59 "expressions.y"
+    {(yyval.Sy) = (yyvsp[(1) - (1)].Sy);;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 59 "expressions.y"
+#line 60 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 61 "expressions.y"
+#line 62 "expressions.y"
     { (yyval.Sy) = newElseNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 62 "expressions.y"
+#line 63 "expressions.y"
     {(yyval.Sy) = newStJoinNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 63 "expressions.y"
+#line 64 "expressions.y"
     { SyntaxTree* id=newIDNode((yyvsp[(1) - (3)].lexeme));
                   (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), id , (yyvsp[(3) - (3)].Sy));
                   SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1;
@@ -1587,182 +1609,182 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 68 "expressions.y"
+#line 69 "expressions.y"
     {(yyval.Sy) = (yyvsp[(1) - (1)].Sy);}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 69 "expressions.y"
+#line 70 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 71 "expressions.y"
+#line 72 "expressions.y"
     { newBoolLabelNode("root", (yyvsp[(2) - (5)].Sy)); newBoolExp((yyvsp[(2) - (5)].Sy)); (yyval.Sy) = newIfNode((yyvsp[(1) - (5)].key), (yyvsp[(2) - (5)].Sy), (yyvsp[(5) - (5)].Sy)); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 73 "expressions.y"
+#line 74 "expressions.y"
     {(yyval.Sy) = newElifJoinNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 75 "expressions.y"
+#line 76 "expressions.y"
     { (yyval.Sy) = (yyvsp[(4) - (4)].Sy); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 76 "expressions.y"
+#line 77 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 78 "expressions.y"
+#line 79 "expressions.y"
     {newBoolLabelNode("root", (yyvsp[(2) - (5)].Sy)); newBoolExp((yyvsp[(2) - (5)].Sy)); (yyval.Sy) = newIfNode((yyvsp[(1) - (5)].key), (yyvsp[(2) - (5)].Sy), (yyvsp[(5) - (5)].Sy));;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 79 "expressions.y"
+#line 80 "expressions.y"
     {(yyval.Sy) = newElifJoinNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 80 "expressions.y"
+#line 81 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 82 "expressions.y"
+#line 83 "expressions.y"
     { newBoolLabelNode("root", (yyvsp[(2) - (5)].Sy)); newBoolExp((yyvsp[(2) - (5)].Sy)); (yyval.Sy) = newWhileNode((yyvsp[(1) - (5)].key), (yyvsp[(2) - (5)].Sy), (yyvsp[(5) - (5)].Sy));;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 84 "expressions.y"
+#line 85 "expressions.y"
     { (yyval.Sy) = (yyvsp[(2) - (3)].Sy);;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 85 "expressions.y"
+#line 86 "expressions.y"
     {(yyval.Sy) = newStJoinNode((yyvsp[(1) - (2)].Sy), (yyvsp[(2) - (2)].Sy));;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 86 "expressions.y"
+#line 87 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 88 "expressions.y"
+#line 89 "expressions.y"
     { (yyval.Sy) = newBoolJoinNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 89 "expressions.y"
+#line 90 "expressions.y"
     { (yyval.Sy) = newBoolJoinNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 90 "expressions.y"
+#line 91 "expressions.y"
     { SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 91 "expressions.y"
+#line 92 "expressions.y"
     { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 92 "expressions.y"
+#line 93 "expressions.y"
     {/*$$.code = gen('goto' $$.true) ;*/;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 93 "expressions.y"
+#line 94 "expressions.y"
     {/*$$.code = gen('goto' $$.false) ;*/;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 96 "expressions.y"
+#line 97 "expressions.y"
     { (yyval.Sy) = newOpNode((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy)); addTriple((yyvsp[(2) - (3)].op), (yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy)); addQuadruple((yyvsp[(2) - (3)].op),(yyvsp[(1) - (3)].Sy),(yyvsp[(3) - (3)].Sy),(yyval.Sy)); ;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 97 "expressions.y"
+#line 98 "expressions.y"
     { (yyval.Sy) = (yyvsp[(2) - (3)].Sy); ;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 98 "expressions.y"
+#line 99 "expressions.y"
     { (yyval.Sy) = newOpNode("-", 0, (yyvsp[(2) - (2)].Sy)); addTriple("-", (yyvsp[(2) - (2)].Sy), 0); addQuadruple("-",(yyvsp[(2) - (2)].Sy),0,(yyval.Sy)); ;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 99 "expressions.y"
+#line 100 "expressions.y"
     { (yyval.Sy) = newIDNode((yyvsp[(1) - (1)].lexeme)); ;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 100 "expressions.y"
+#line 101 "expressions.y"
     { (yyval.Sy) = newLiteralNode((yyvsp[(1) - (1)].value),1);;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 101 "expressions.y"
+#line 102 "expressions.y"
     { (yyval.Sy) = newLiteralNode((yyvsp[(1) - (1)].value),2);;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 104 "expressions.y"
+#line 105 "expressions.y"
     {(yyval.Sy) = newCollectionNode((yyvsp[(2) - (3)].Sy), 1);  printNode((yyval.Sy));;}
     break;
 
@@ -1776,301 +1798,301 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 110 "expressions.y"
+#line 109 "expressions.y"
     {(yyval.Sy) = newCollectionNode((yyvsp[(2) - (3)].Sy), 3);  printNode((yyval.Sy));;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 117 "expressions.y"
+#line 115 "expressions.y"
     {(yyval.Sy) = newEcomNode((yyvsp[(1) - (3)].Sy), (yyvsp[(3) - (3)].Sy));;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 118 "expressions.y"
+#line 116 "expressions.y"
     {(yyval.Sy)=(yyvsp[(1) - (1)].Sy);;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 119 "expressions.y"
+#line 117 "expressions.y"
     {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; (yyval.Sy) = s;;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 121 "expressions.y"
+#line 119 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 122 "expressions.y"
+#line 120 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 123 "expressions.y"
+#line 121 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 124 "expressions.y"
+#line 122 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 125 "expressions.y"
+#line 123 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 128 "expressions.y"
+#line 126 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 129 "expressions.y"
+#line 127 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 130 "expressions.y"
+#line 128 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 131 "expressions.y"
+#line 129 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 132 "expressions.y"
+#line 130 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 133 "expressions.y"
+#line 131 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 134 "expressions.y"
+#line 132 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 137 "expressions.y"
+#line 135 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 138 "expressions.y"
+#line 136 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 139 "expressions.y"
+#line 137 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 140 "expressions.y"
+#line 138 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 141 "expressions.y"
+#line 139 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 142 "expressions.y"
+#line 140 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 145 "expressions.y"
+#line 143 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 146 "expressions.y"
+#line 144 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 147 "expressions.y"
+#line 145 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 148 "expressions.y"
+#line 146 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 149 "expressions.y"
+#line 147 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 150 "expressions.y"
+#line 148 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 151 "expressions.y"
+#line 149 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 152 "expressions.y"
+#line 150 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 153 "expressions.y"
+#line 151 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 154 "expressions.y"
+#line 152 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 157 "expressions.y"
+#line 155 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 158 "expressions.y"
+#line 156 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 161 "expressions.y"
+#line 159 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 162 "expressions.y"
+#line 160 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 165 "expressions.y"
+#line 163 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 166 "expressions.y"
+#line 164 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 167 "expressions.y"
+#line 165 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 168 "expressions.y"
+#line 166 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 169 "expressions.y"
+#line 167 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 170 "expressions.y"
+#line 168 "expressions.y"
     {(yyval.op) = (yyvsp[(1) - (1)].op);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2074 "expressions.tab.c"
+#line 2096 "expressions.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2282,7 +2304,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 173 "expressions.y"
+#line 171 "expressions.y"
 
 
 void yyerror(const char *s) {
@@ -2293,6 +2315,11 @@ int main() {
     yyin = fopen("file.py","r");
     yyparse();
     saveTriple(); saveQuadruple();
+    splitLines("../Data Structures/3Addrcode.txt");
+    Convert();
+    int* uniqueArr = RemoveDupandSort();
+    char **blocks = BasicBlocks(uniqueArr);
+    printBlocks(blocks);
     return 0;
 }
 

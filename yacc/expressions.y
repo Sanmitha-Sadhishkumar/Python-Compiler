@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "../C_routines/3AddrCode.h"
+#include "../C_routines/CodeOptim.h"
 
 #define YYERROR_VERBOSE 1
 extern int yylineno;
@@ -51,11 +52,11 @@ int i=0;
 %%
 G : P { $$ = $1; gen3addr($$);  printSyntaxTree($$);};
 
-P : S {$$ = $1; }
+P : S {$$ = $1;}
   | S NL P {$$ = newStJoinNode($1, $3);}
-  | LIST 
-  | TUPLE
-  | SET 
+  | LIST {$$ = $1;}
+  | TUPLE {$$ = $1;}
+  | SET {$$ = $1;}
   | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
 S : if_statement else_elif { $$ = newElseNode($1, $2);}
@@ -101,14 +102,11 @@ E : E oper E { $$ = newOpNode($2, $1, $3); addTriple($2, $1, $3); addQuadruple($
   | FLOAT { $$ = newLiteralNode($1,2);}
   ;
 
-LIST : LISTO ECOM LISTC {$$ = newCollectionNode($2, 1);  printNode($$);}
-     ;
+LIST : LISTO ECOM LISTC {$$ = newCollectionNode($2, 1);  printNode($$);};
 
-TUPLE : TUPLEO ECOM TUPLEC {$$ = newCollectionNode($2, 2);  printNode($$);}
-     ;
+TUPLE : TUPLEO ECOM TUPLEC {$$ = newCollectionNode($2, 2);  printNode($$);};
 
-SET : SETO ECOM SETC {$$ = newCollectionNode($2, 3);  printNode($$);}
-     ;
+SET : SETO ECOM SETC {$$ = newCollectionNode($2, 3);  printNode($$);};
 /*
 DICT : SETO E COLON E COMMA DICT SETC {printNode($2);}
      | SETO E COLON E SETC         {printNode($2);}
@@ -180,5 +178,10 @@ int main() {
     yyin = fopen("file.py","r");
     yyparse();
     saveTriple(); saveQuadruple();
+    splitLines("../Data Structures/3Addrcode.txt");
+    Convert();
+    int* uniqueArr = RemoveDupandSort();
+    char **blocks = BasicBlocks(uniqueArr);
+    printBlocks(blocks);
     return 0;
 }

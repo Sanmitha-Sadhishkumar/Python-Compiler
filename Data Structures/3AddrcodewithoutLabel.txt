@@ -1,25 +1,19 @@
-t1=d**t
-t2=h-t1
-t3=b//t2
-t4=0**t3
-h=t4
+h=0
 k=0
-t7=b+c
-aa=t7
-if b : goto (11)
-goto (15)
-if c : goto (13)
-goto (15)
+t3=b+c
+aa=t3
+if a : goto (7)
+goto (12)
+if b : goto (9)
+goto (12)
+t5=c*d
+t6=b+t5
+f=t6
+if b : goto (14)
+goto (18)
+if c : goto (16)
+goto (18)
 kkk=0
-goto (9)
-b=0
-if a : goto (18)
-goto (24)
-if b : goto (20)
-goto (24)
-t11=c*d
-t12=b+t11
-f=t12
-goto (25)
-f=0
+goto (12)
 aa=0
+bbbbb=0
