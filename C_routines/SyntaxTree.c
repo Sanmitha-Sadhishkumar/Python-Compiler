@@ -256,7 +256,7 @@ SyntaxTree* newBoolExp(SyntaxTree *node){
         node->code = strdup(code);
         node->addr = NULL;
         return node;
-    }
+    } 
 }
 
 /*If-else-elif*/
@@ -275,11 +275,19 @@ SyntaxTree* newIfNode(char *op, SyntaxTree*l, SyntaxTree*r){
     node->True = malloc(10);
     node->False = malloc(10);
     char code[400000];
-    sprintf(l->next, "%s", l->True);
-    sprintf(node->True, "%s", l->True);
-    sprintf(node->False, "%s", l->False);
-    sprintf(node->next, "L%d", label++);
-    sprintf(code, "%s\n%s : %s",  strdup(l->code), l->True, strdup(r->code));
+    if (l->nodetype==LOG_NODE){
+        sprintf(l->next, "%s", l->True);
+        sprintf(node->True, "%s", l->True);
+        sprintf(node->False, "%s", l->False);
+        sprintf(node->next, "L%d", label++);
+        sprintf(code, "%s\n%s : %s",  strdup(l->code), l->True, strdup(r->code));
+    } else {
+        //sprintf(l->next, "%s", label++);
+        sprintf(node->True, "L%d", label++);
+        sprintf(node->False, "L%d", label++);
+        sprintf(node->next, "L%d", label++);
+        sprintf(code, "%sif %s : goto %s\ngoto %s\n%s : %s",  strdup(l->code), l->addr,  node->True, node->False, node->True, strdup(r->code));
+    }
     node->code = strdup(code);
     return node;
 }
@@ -445,13 +453,13 @@ void printSyntaxTree(SyntaxTree *head) {
 
 void printNode(SyntaxTree* a){
     int i;
-    printf("\nNodetype : %d\n",a->nodetype);
+    //printf("\nNodetype : %d\n",a->nodetype);
     //printf("\nAddr : %s",a->addr);
-    //printf("\ncode : %s",a->code);
+    printf("\n3 address code : \n%s",a->code);
     //printf("\nnext : %s",a->next);
     //printf("\ntrue : %s",a->True);
     //printf("\nfalse : %s\n\n",a->False);
-    for(i=0; i<a->valuen;i++){
+    /*for(i=0; i<a->valuen;i++){
         printf("%s ", a->coll[i]);
-    }
+    }*/
 }

@@ -2,18 +2,19 @@ h=0
 k=0
 t3=b+c
 aa=t3
-if a : goto (7)
+t5=a>b
+if t5 : goto (8)
 goto (12)
-if b : goto (9)
-goto (12)
-t5=c*d
-t6=b+t5
-f=t6
-if b : goto (14)
-goto (18)
-if c : goto (16)
-goto (18)
+t6=c*d
+t7=b+t6
+f=t7
+goto (13)
+hh=0
+if b : goto (15)
+goto (19)
+if c : goto (17)
+goto (19)
 kkk=0
-goto (12)
+goto (13)
 aa=0
 bbbbb=0

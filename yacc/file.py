@@ -1,8 +1,10 @@
 h=0
 k=0
 aa=b+c
-if a and b:
+if a>b:
     f=b+c*d 
+else :
+    hh=0
 
 while b and c:
     kkk=0

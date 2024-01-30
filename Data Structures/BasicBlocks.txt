@@ -3,39 +3,38 @@ h=0
 k=0
 t3=b+c
 aa=t3
-if a : goto B2
+t5=a>b
+if t5 : goto B2
 
 B1: 
-goto B5
+goto B3
 
 B2: 
-if b : goto B4
+t6=c*d
+t7=b+t6
+f=t7
+goto B4
 
 B3: 
-goto B5
+hh=0
 
 B4: 
-t5=c*d
-t6=b+t5
-f=t6
+if b : goto B6
 
 B5: 
-if b : goto B7
+goto B9
 
 B6: 
-goto B10
+if c : goto B8
 
 B7: 
-if c : goto B9
+goto B9
 
 B8: 
-goto B10
+kkk=0
+goto B4
 
 B9: 
-kkk=0
-goto B5
-
-B10: 
 aa=0
 bbbbb=0
 

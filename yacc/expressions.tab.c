@@ -1536,7 +1536,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 53 "expressions.y"
-    { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); gen3addr((yyval.Sy));  printSyntaxTree((yyval.Sy));;}
+    { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); printNode((yyval.Sy)); gen3addr((yyval.Sy));  printSyntaxTree((yyval.Sy));;}
     break;
 
   case 3:
@@ -1624,7 +1624,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 72 "expressions.y"
-    { newBoolLabelNode("root", (yyvsp[(2) - (5)].Sy)); newBoolExp((yyvsp[(2) - (5)].Sy)); (yyval.Sy) = newIfNode((yyvsp[(1) - (5)].key), (yyvsp[(2) - (5)].Sy), (yyvsp[(5) - (5)].Sy)); ;}
+    { newBoolLabelNode("root", (yyvsp[(2) - (5)].Sy));newBoolExp((yyvsp[(2) - (5)].Sy)); (yyval.Sy) = newIfNode((yyvsp[(1) - (5)].key), (yyvsp[(2) - (5)].Sy), (yyvsp[(5) - (5)].Sy));;}
     break;
 
   case 15:
@@ -1722,7 +1722,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 92 "expressions.y"
-    { (yyval.Sy) = (yyvsp[(1) - (1)].Sy); ;}
+    { (yyval.Sy) = (yyvsp[(1) - (1)].Sy);;}
     break;
 
   case 29:

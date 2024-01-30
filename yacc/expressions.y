@@ -47,10 +47,10 @@ int i=0;
 %left PLUS MINUS
 %left MUL DIV FDIV MOD
 %left BNOT
-%left EXP
+%right EXP
 
 %%
-G : P { $$ = $1; gen3addr($$);  printSyntaxTree($$);};
+G : P { $$ = $1; printNode($$); gen3addr($$);  printSyntaxTree($$);};
 
 P : S {$$ = $1;}
   | S NL P {$$ = newStJoinNode($1, $3);}
@@ -69,7 +69,7 @@ S : if_statement else_elif { $$ = newElseNode($1, $2);}
   | E {$$ = $1}
   | /* empty */ {SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); s->nodetype = -1; s->code = ""; $$ = s;} ;
 
-if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2); newBoolExp($2); $$ = newIfNode($1, $2, $5); } ;
+if_statement : IF B COLON NL indent_statement { newBoolLabelNode("root", $2);newBoolExp($2); $$ = newIfNode($1, $2, $5);} ;
 
 else_elif: elif_statement else_statement {$$ = newElifJoinNode($1, $2);} ;
 
@@ -89,7 +89,7 @@ indent_statement : SPACE S NL{ $$ = $2;}
 B : B OR B    { $$ = newBoolJoinNode($2, $1, $3);}
   | B AND B   { $$ = newBoolJoinNode($2, $1, $3);}
   | NOT B     { SyntaxTree* s = (SyntaxTree*)malloc(sizeof(SyntaxTree)); }
-  | E         { $$ = $1; }
+  | E         { $$ = $1;}
   | TRUE      {/*$$.code = gen('goto' $$.true) ;*/}
   | FALSE     {/*$$.code = gen('goto' $$.false) ;*/}
   ;

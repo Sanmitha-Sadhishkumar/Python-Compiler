@@ -1,6 +1,11 @@
 # Python-Compiler
 A compiler for Python language using lex, yacc, etc
 
+Supports:
+Expressions
+If statements with elif and else
+While statements with else
+
 #To Run (Directories mentioned): 
 
 Inside lex dir:

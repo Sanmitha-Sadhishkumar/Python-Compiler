@@ -11,7 +11,8 @@ int b=0;
 void splitLines(char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error opening file %s for writing");
+    printf("op %s", filename);
+        fprintf(stderr, "Error opening file %s for reading");
         return;
     }
     char line[256];

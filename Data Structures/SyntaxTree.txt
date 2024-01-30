@@ -13,9 +13,9 @@
                     |-- b
                     |-- c
             |-- S
-                |-- If(True : (null), next : L4)
-                    |-- If(True : L1, next : L4)
-                        |-- and (True : L1, False : L2)
+                |-- If(True : (null), next : L3)
+                    |-- If(True : L1, next : L3)
+                        |--  >
                             |-- a
                             |-- b
                         |-- =
@@ -25,10 +25,14 @@
                                 |--  *
                                     |-- c
                                     |-- d
+                    |-- elif
+                        |-- =
+                            |-- hh
+                            |-- 0
                 |-- S
                     |-- S
-                        |-- while (True : L5, next : L9)
-                            |-- and (True : L5, False : L6)
+                        |-- while (True : L4, next : L8)
+                            |-- and (True : L4, False : L5)
                                 |-- b
                                 |-- c
                             |-- =
